@@ -1,3 +1,4 @@
-# swash
+# Swashbuckler
 
-Help I don't know how to make a thing
+This mod creates the Swashbuckler class and adds it into Dawnsbury Days.
+
