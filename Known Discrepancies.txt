@@ -3,7 +3,7 @@ KNOWN ISSUES - MAR 29 2024
 - PANACHE IS NOT GRANTED BY VANILLA TUMBLE THROUGH
 (This one's limited by the system, since Tumble Through isn't an action in itself. The code's all there, though. If an action with the name "Tumble Through" can be created, this mod'll check for it.)
 ADDENDUM:
-This mod provides a Tumble Through action of its own, given only to Swashbucklers.
+This mod provides a Tumble Through action of its own, given only to Swashbucklers. Using this Tumble Through does work with Panache.
 
 - GUARDIAN'S DEFLECTION ONLY WORKS ON MELEE ATTACKS
 (This is because it uses the same trigger as Reactive Shield, which I deemed acceptable because a character raising a shield gains no benefit from an additional +2 circumstance bonus anyway, and I couldn't figure out how to actually apply the modifiers otherwise.
