@@ -588,8 +588,7 @@ public class AddSwash
                             }
                         };
                         target.AddQEffect(aided);
-                    }))
-                .WithPossibilityGroup("Other actions");
+                    }));
             };
         })
         .WithCustomName("One For All");
@@ -882,7 +881,7 @@ public class AddSwash
         //ModManager.AddFeat(AddPanache);
         ModManager.AddFeat(DisarmingFlair);
         //ModManager.AddFeat(DuelingParry);
-        ModManager.AddFeat(FlyingBlade);
+        //ModManager.AddFeat(FlyingBlade);
         ReplaceYoureNext();
         ReplaceNimbleDodge();
         ModManager.AddFeat(GoadingFeint);

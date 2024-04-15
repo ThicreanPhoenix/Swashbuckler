@@ -1,5 +1,4 @@
-﻿using Dawnsbury.Mods.Phoenix;
-using Dawnsbury.Modding;
+﻿using Dawnsbury.Modding;
 
 namespace Dawnsbury.Mods.Phoenix;
     public class BootUp
