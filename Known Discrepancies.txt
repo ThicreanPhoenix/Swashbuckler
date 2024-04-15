@@ -1,0 +1,15 @@
+KNOWN ISSUES - MAR 29 2024
+
+- PANACHE IS NOT GRANTED BY VANILLA TUMBLE THROUGH
+(This one's limited by the system, since Tumble Through isn't an action in itself. The code's all there, though. If an action with the name "Tumble Through" can be created, this mod'll check for it.)
+ADDENDUM:
+This mod provides a rudimentary action called Tumble Around, which allows the user to Stride and make an Acrobatics check against an adjacent enemy. Succeeding on this check will then allow the user to move 5 feet.
+The maximum distance of the initial Stride is reduced by 15 feet to simulate the movement cost of moving into and out of the opponent's space.
+
+- GUARDIAN'S DEFLECTION ONLY WORKS ON MELEE ATTACKS
+(This is because it uses the same trigger as Reactive Shield, which I deemed acceptable because a character raising a shield gains no benefit from an additional +2 circumstance bonus anyway, and I couldn't figure out how to actually apply the modifiers otherwise.
+If that restriction can be lifted, or a workaround found, then making it apply to ranged attacks can happen.)
+
+- OPPORTUNE RIPOSTE DOES NOT PROVIDE THE OPTION TO DISARM
+(Unlike Strike and Demoralize [see AttackofOpportunity and YoureNext], Disarm is not a public action. I think I understand the logic, but I don't feel right copypasting the entire text of the Disarm action.
+I figure it's fine; discluding the option streamlines things, and the attack is usually more beneficial anyway. If there's an outcry, I can attempt to implement it.)
