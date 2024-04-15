@@ -881,7 +881,7 @@ public class AddSwash
         ModManager.AddFeat(Swashbuckler);
         //ModManager.AddFeat(AddPanache);
         ModManager.AddFeat(DisarmingFlair);
-        ModManager.AddFeat(DuelingParry);
+        //ModManager.AddFeat(DuelingParry);
         ModManager.AddFeat(FlyingBlade);
         ReplaceYoureNext();
         ReplaceNimbleDodge();
