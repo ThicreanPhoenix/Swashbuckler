@@ -240,33 +240,7 @@ public class AddSwash
             }
         };
     }
-    /*
-    public static QEffect PreciseStrike(string damageFormula, string damageRoll)
-    {
-        DiceFormula extraDamage = DiceFormula.FromText(damageFormula, "Precise Strike");
-        DiceFormula extraRoll = DiceFormula.FromText(damageRoll, "Precise Strike");
-        return new QEffect("Precise Strike", "You deal an extra " + extraDamage.ToString() + " precision damage with agile or finesse weapons while you have panache. If the attack is a finisher, you deal an extra " + extraDamage.ToString() + "d6 damage instead.", ExpirationCondition.Never, null, IllustrationName.None)
-        {
-            Innate = true,
-            YouDealDamageWithStrike = delegate (QEffect qf, CombatAction action, DiceFormula diceFormula, Creature defender)
-            {
-                bool flag = action.HasTrait(Trait.Agile) || action.HasTrait(Trait.Finesse) || action.HasTrait(Trait.Unarmed);
-                bool flag2 = action.Owner.HasEffect(Panache);
-                bool flag3 = action.HasTrait(Finisher);
-                bool flag4 = !action.HasTrait(Trait.Ranged) || (action.HasTrait(Trait.Thrown) && (Panache.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Flying Blade") ?? false) && (defender.DistanceTo(qf.Owner) <= action.Item.WeaponProperties.RangeIncrement));
-                if (flag && flag3 && flag4)
-                {
-                    return diceFormula.Add(extraRoll);
-                }
-                else if (flag && flag2 && flag4)
-                {
-                    return diceFormula.Add(extraDamage);
-                }
-                return diceFormula;
-            }
-        };
-    }
-    */
+  
     public static readonly Feat VivaciousSpeed = new Feat(ModManager.RegisterFeatName("Vivacious Speed"), "When you've made an impression, you move even faster than normal, darting about the battlefield with incredible speed.", "The status bonus to your Speed from panache increases to 10 feet. When you don't have panache, you still get half this status bonus to your Speeds, rounded down to the nearest 5-foot increment.", new List<Trait>(), null)
         .WithPermanentQEffect("You move quickly, even when you don't have panache.", delegate (QEffect qf)
         {
