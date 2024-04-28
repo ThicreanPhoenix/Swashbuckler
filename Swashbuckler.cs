@@ -19,12 +19,14 @@ using Dawnsbury.Core.Mechanics.Treasure;
 using Dawnsbury.Core.CharacterBuilder.FeatsDb.Common;
 using Dawnsbury.Display.Illustrations;
 using Dawnsbury.Core.Tiles;
+using Dawnsbury.Audio;
+using Dawnsbury.Core.Mechanics.Rules;
 
 namespace Dawnsbury.Mods.Phoenix;
 
 public class AddSwash
 {
-    public static Trait SwashTrait = ModManager.RegisterTrait("SwashTrait ", new TraitProperties("Swashbuckler", true) { IsClassTrait = true });
+    public static Trait SwashTrait = ModManager.RegisterTrait("SwashTrait", new TraitProperties("Swashbuckler", true) { IsClassTrait = true });
     public static Trait Finisher = ModManager.RegisterTrait("Finisher", new TraitProperties("Finisher", true, "You can only use an action with the Finisher trait if you have panache, and you lose panache after performing the action.", true));
     public static QEffectId PanacheId = ModManager.RegisterEnumMember<QEffectId>("Panache");
     public static QEffect CreatePanache()
@@ -51,7 +53,11 @@ public class AddSwash
         };
         panache.BonusToSkills = delegate(Skill skill)
         {
-            if ((skill == Skill.Acrobatics) || ((panache.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Braggart") ?? false) && (skill == Skill.Intimidation)) || ((panache.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Fencer") ?? false) && (skill == Skill.Deception)) || ((panache.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Gymnast") ?? false) && skill == Skill.Athletics))
+            if ((skill == Skill.Acrobatics) 
+                || ((panache.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Braggart") ?? false) && (skill == Skill.Intimidation)) 
+                || ((panache.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Fencer") ?? false) && (skill == Skill.Deception)) 
+                || ((panache.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Gymnast") ?? false) && skill == Skill.Athletics) 
+                /*|| ((panache.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Wit") ?? false) && (skill == Skill.Diplomacy))*/)
             {
                 return new Bonus(1, BonusType.Circumstance, "Panache");
             }
@@ -111,7 +117,13 @@ public class AddSwash
                 .WithOnSheet(delegate (CalculatedCharacterSheetValues sheet)
                 {
                     sheet.GrantFeat(FeatName.Athletics);
-                })
+                })/*,
+            new Feat(ModManager.RegisterFeatName("Wit"), "You are friendly, clever, and full of humor, knowing just what to say in any situation. Your witticisms leave your foes unprepared for the skill and speed of your attacks.", "You become trained in Diplomacy and gain the Bon Mot feat. You gain panache whenever you succeed at a Bon Mot against a foe.", new List<Trait>(), null)
+                .WithOnSheet(delegate (CalculatedCharacterSheetValues sheet)
+                {
+                    sheet.GrantFeat(FeatName.Diplomacy);
+                    sheet.GrantFeat(BonMot.FeatName);
+                })*/
         })
         .WithOnSheet(delegate (CalculatedCharacterSheetValues sheet)
             {
@@ -229,7 +241,11 @@ public class AddSwash
             AfterYouTakeAction = async delegate (QEffect qf, CombatAction action)
             {
                 bool flag = (action.CheckResult == CheckResult.Success) || (action.CheckResult == CheckResult.CriticalSuccess);
-                bool flag2 = (action.Name == "Tumble Through") || ((qf.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Braggart") ?? false) && (action.Name == "Demoralize")) || ((qf.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Fencer") ?? false) && (action.Name == "Feint" || action.Name == "Create a Diversion")) || ((qf.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Gymnast") ?? false) && (action.Name == "Grapple" || action.Name == "Shove" || action.Name == "Trip"));
+                bool flag2 = (action.Name == "Tumble Through") 
+                    || ((qf.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Braggart") ?? false) && (action.Name == "Demoralize")) 
+                    || ((qf.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Fencer") ?? false) && (action.Name == "Feint" || action.Name == "Create a Diversion")) 
+                    || ((qf.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Gymnast") ?? false) && (action.Name == "Grapple" || action.Name == "Shove" || action.Name == "Trip"))
+                    || ((qf.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Wit") ?? false) && (action.Name == "Bon Mot"));
                 bool flag3 = !qf.Owner.HasEffect(PanacheId);
                 {
                     if (flag && flag2 && flag3)
@@ -290,6 +306,119 @@ public class AddSwash
             };
         });
 
+    //Implemented as far as I'm aware, but the AI will never use the retort.
+    public static Feat BonMot = new TrueFeat(ModManager.RegisterFeatName("BonMot", "Bon Mot {icon:Action}"), 1, "You launch an insightful quip at a foe, distracting them.", "Using one action, choose a foe within 30 feet of you and make a Diplomacy check against their Will DC, with the following effects:\n\n{b}Critical Success:{/b} The target is distracted and takes a -3 status penalty to Perception and to Will saves for 1 minute. The target can end the effect early by using a single action to retort to your quip.\n{b}Success:{/b} As success, but the penalty is -2.\n{b}Critical Failure: {/b}Your quip is atrocious. You take the same penalty an enemy would take had you succeeded. This lasts for one minute or until you use another Bon Mot and succeed.", new Trait[6] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Linguistic, Trait.Mental }, null)
+        .WithPermanentQEffect(null, delegate (QEffect qf)
+        {
+            qf.ProvideActionIntoPossibilitySection = (qfbonmot, section) =>
+            {
+                if (section.PossibilitySectionId == PossibilitySectionId.OtherManeuvers)
+                {
+                    return new ActionPossibility(new CombatAction(qf.Owner, IllustrationName.Confusion, "Bon Mot", new Trait[5] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.Linguistic, Trait.Mental }, "Use Diplomacy to distract a foe.", Target.Ranged(6)
+                        .WithAdditionalConditionOnTargetCreature((Creature self, Creature target) => (target.QEffects.Any((QEffect effect) => effect.Name == "Bon Mot")) ? Usability.NotUsableOnThisCreature("This enemy is already distracted.") : Usability.Usable)
+                        .WithAdditionalConditionOnTargetCreature((Creature self, Creature target) => target.DoesNotSpeakCommon ? Usability.NotUsableOnThisCreature("The creature cannot understand your words.") : Usability.Usable))
+                        .WithActionCost(1)
+                        .WithActiveRollSpecification(new ActiveRollSpecification(Checks.SkillCheck(Skill.Diplomacy), Checks.DefenseDC(Defense.Will)))
+                        .WithEffectOnEachTarget(async (spell, caster, target, result) =>
+                        {
+                            switch (result)
+                            {
+                                case CheckResult.CriticalSuccess:
+                                    if (caster.QEffects.Any((QEffect effect) => effect.Name == "Bon Mot"))
+                                    {
+                                        caster.RemoveAllQEffects((QEffect effect) => effect.Name == "Bon Mot");
+                                    }
+                                    QEffect bonmotcrit = new QEffect().WithExpirationAtStartOfSourcesTurn(caster, 10);
+                                    bonmotcrit.Name = "Bon Mot";
+                                    bonmotcrit.Illustration = IllustrationName.Confused;
+                                    bonmotcrit.Description = "You have a -3 status penalty to Perception and to Will saves.";
+                                    bonmotcrit.BonusToDefenses = delegate (QEffect thing, CombatAction something, Defense defense)
+                                    {
+                                        if (defense == Defense.Will || defense == Defense.Perception)
+                                        {
+                                            return new Bonus(-3, BonusType.Status, "Bon Mot");
+                                        }
+                                        else return null;
+                                    };
+                                    bonmotcrit.ProvideMainAction = qftechnical =>
+                                    {
+                                        return new ActionPossibility(new CombatAction(bonmotcrit.Owner, IllustrationName.Rage, "Retort", new Trait[3] { Trait.Concentrate, Trait.Linguistic, Trait.Mental }, "You return the quip against you and attempt to remove the penalty from Bon Mot.", Target.Ranged(6)
+                                            .WithAdditionalConditionOnTargetCreature((Creature self, Creature target) => target == qf.Owner ? Usability.Usable : Usability.NotUsableOnThisCreature("Not owner")))
+                                            .WithActionCost(1)
+                                            .WithActiveRollSpecification(new ActiveRollSpecification(Checks.SkillCheck(Skill.Diplomacy), Checks.DefenseDC(Defense.Will)))
+                                            .WithEffectOnEachTarget(async (spell, caster, target, result) =>
+                                            {
+                                                if (result >= CheckResult.Success)
+                                                {
+                                                    bonmotcrit.Owner.RemoveAllQEffects((QEffect qf) => qf == bonmotcrit);
+                                                }
+                                            }));
+                                    };
+                                    target.AddQEffect(bonmotcrit);
+                                    break;
+                                case CheckResult.Success:
+                                    if (caster.QEffects.Any((QEffect effect) => effect.Name == "Bon Mot"))
+                                    {
+                                        caster.RemoveAllQEffects((QEffect effect) => effect.Name == "Bon Mot");
+                                    }
+                                    QEffect bonmotwin = new QEffect().WithExpirationAtStartOfSourcesTurn(caster, 10);
+                                    bonmotwin.Name = "Bon Mot";
+                                    bonmotwin.Illustration = IllustrationName.Confused;
+                                    bonmotwin.Description = "You have a -2 status penalty to Perception and to Will saves.";
+                                    bonmotwin.BonusToDefenses = delegate (QEffect thing, CombatAction something, Defense defense)
+                                    {
+                                        if (defense == Defense.Will || defense == Defense.Perception)
+                                        {
+                                            return new Bonus(-2, BonusType.Status, "Bon Mot");
+                                        }
+                                        else return null;
+                                    };
+                                    bonmotwin.ProvideMainAction = qftechnical =>
+                                    {
+                                        return new ActionPossibility(new CombatAction(bonmotwin.Owner, IllustrationName.Rage, "Retort", new Trait[3] { Trait.Concentrate, Trait.Linguistic, Trait.Mental }, "You return the quip against you and attempt to remove the penalty from Bon Mot.", Target.Ranged(6)
+                                            .WithAdditionalConditionOnTargetCreature((Creature self, Creature target) => self == qf.Owner ? Usability.Usable : Usability.NotUsableOnThisCreature("Not owner")))
+                                            .WithActionCost(1)
+                                            .WithActiveRollSpecification(new ActiveRollSpecification(Checks.SkillCheck(Skill.Diplomacy), Checks.DefenseDC(Defense.Will)))
+                                            .WithEffectOnEachTarget(async (spell, caster, target, result) =>
+                                            {
+                                                if (result >= CheckResult.Success)
+                                                {
+                                                    bonmotwin.Owner.RemoveAllQEffects((QEffect qf) => qf == bonmotwin);
+                                                }
+                                            }));
+                                    };
+                                    target.AddQEffect(bonmotwin);
+                                    break;
+                                case CheckResult.CriticalFailure:
+                                    QEffect bonmotfumble = new QEffect().WithExpirationAtStartOfSourcesTurn(caster, 10);
+                                    bonmotfumble.Name = "Bon Mot";
+                                    bonmotfumble.Illustration = IllustrationName.Confused;
+                                    bonmotfumble.Description = "You have a -2 status penalty to Perception and to Will saves.";
+                                    bonmotfumble.BonusToDefenses = delegate (QEffect thing, CombatAction something, Defense defense)
+                                    {
+                                        if (defense == Defense.Will || defense == Defense.Perception)
+                                        {
+                                            return new Bonus(-2, BonusType.Status, "Bon Mot");
+                                        }
+                                        else return null;
+                                    };
+                                    bonmotfumble.BonusToAttackRolls = delegate (QEffect effect, CombatAction action, Creature owner)
+                                    {
+                                        if (action.ActionId == ActionId.Seek)
+                                        {
+                                            return new Bonus(-2, BonusType.Status, "Bon Mot Crit Fail");
+                                        }
+                                        else return null;
+                                    };
+                                    caster.AddQEffect(bonmotfumble);
+                                    break;
+                            }
+                        }));
+                }
+                else return null;
+            };
+        });
+
     //This one's a test, originally to learn how to add stuff and later to expedite testing with Panache. I think I'll leave it in just in case someone wants to poke around in the mod.
     public static Feat AddPanache = new TrueFeat(FeatName.CustomFeat, 1, "You give yourself panache as a test.", "Test to see if the feat and condition load.", new Trait[1] { SwashTrait }, null)
         .WithOnCreature((sheet, creature) =>
@@ -337,7 +466,6 @@ public class AddSwash
             };
         });
 
-
     public static Feat DuelingParry = new TrueFeat(ModManager.RegisterFeatName("DuelingParry", "Dueling Parry{icon:Action}"), 2, "You use your one-handed weapon to parry attacks.", "{b}Requirements:{/b} You are holding a one-handed melee weapon, and have the other hand free.\n\nYou gain a +2 circumstance bonus to your AC until the start of your next turn. You lose this circumstance bonus if you no longer meet this feat's requirements.", new Trait[2] { Trait.Fighter, SwashTrait })
         .WithPermanentQEffect(delegate (QEffect qf)
         {
@@ -374,20 +502,77 @@ public class AddSwash
                                 };
                                 target.AddQEffect(parrybonus);
                             })
-                            .WithSoundEffect(Audio.SfxName.RaiseShield));
+                            .WithSoundEffect(SfxName.RaiseShield));
                     }
                 }
                 return null;
             };
         });
 
-    //Currently more of a flag than a proper feat that does something. The edit that applies this to anything is found in Precise Strike's description.
-    //Need to see if I can get this to grant finishers. GM rulings apply to what finishers it can be used on.
-    //In order to implement the Precise Strike prereq, I'm gonna have to rework Precise Strike into a Feat instead of a QEffect.
+    //Grants thrown versions of Confident Finisher and Unbalancing Finisher, as long as your weapons meet the criteria. It's usually down to GM judgement which finishers Flying Blade applies to anyway.
     public static Feat FlyingBlade = new TrueFeat(ModManager.RegisterFeatName("FlyingBlade", "Flying Blade"), 1, "You've learned to apply your flashy techniques to thrown weapons just as easily as melee.", "When you have panache, you apply your additional damage from Precise Strike on ranged Strikes you make with a thrown weapon within its first range increment. The thrown weapon must be an agile or finesse weapon.", new Trait[1] { SwashTrait }, null)
         .WithPermanentQEffect(delegate (QEffect qf)
         {
-            
+            if (qf.Owner.HasFeat(Confident.FeatName))
+            {
+                qf.Owner.AddQEffect(new QEffect()
+                {
+                    ProvideStrikeModifier = delegate (Item item)
+                    {
+                        StrikeModifiers conf = new StrikeModifiers();
+                        bool flag = (item.HasTrait(Trait.Thrown10Feet) || item.HasTrait(Trait.Thrown20Feet)) && (item.HasTrait(Trait.Agile) || item.HasTrait(Trait.Finesse) || item.HasTrait(Trait.Unarmed));
+                        bool flag2 = qf.Owner.HasEffect(PanacheId);
+                        if (flag && flag2)
+                        {
+                            CombatAction confthrow = StrikeRules.CreateStrike(qf.Owner, item, RangeKind.Ranged, -1, true, conf);
+                            confthrow.Name = "Confident Finisher (Thrown)";
+                            confthrow.Illustration = new SideBySideIllustration(item.Illustration, IllustrationName.StarHit);
+                            confthrow.ActionCost = 1;
+                            confthrow.WithEffectOnChosenTargets(async delegate (Creature creature, ChosenTargets targets)
+                            {
+                                targets.ChosenCreature.AddQEffect(new QEffect()
+                                {
+                                    AfterYouAreTargeted = async delegate (QEffect qfbonk, CombatAction strike)
+                                    {
+                                        if (strike.CheckResult == CheckResult.Failure)
+                                        {
+                                            HalfDiceFormula halfdamage = new HalfDiceFormula(DiceFormula.FromText("2d6", "Precise Strike"), "Miss with Confident Finisher");
+                                            await strike.Owner.DealDirectDamage(confthrow, halfdamage, targets.ChosenCreature, confthrow.CheckResult, confthrow.StrikeModifiers.CalculatedItem.WeaponProperties.DamageKind);
+                                        }
+                                    },
+                                    ExpiresAt = ExpirationCondition.Ephemeral
+                                });
+                                FinisherExhaustion(confthrow.Owner);
+                            });
+                            confthrow.Traits.Add(Finisher);
+                            return confthrow;
+                        }
+                        return null;
+                    }
+                });
+            }
+            if (qf.Owner.HasFeat(UnbalancingFinisher.FeatName))
+            {
+                qf.Owner.AddQEffect(new QEffect()
+                {
+                    ProvideStrikeModifier = delegate (Item item)
+                    {
+                        StrikeModifiers unbalancing = new StrikeModifiers();
+                        bool flag = (item.HasTrait(Trait.Thrown10Feet) || item.HasTrait(Trait.Thrown20Feet)) && (item.HasTrait(Trait.Agile) || item.HasTrait(Trait.Finesse) || item.HasTrait(Trait.Unarmed));
+                        bool flag2 = qf.Owner.HasEffect(PanacheId);
+                        if (flag && flag2)
+                        {
+                            CombatAction unbal = StrikeRules.CreateStrike(qf.Owner, item, RangeKind.Ranged, -1, true, unbalancing);
+                            unbal.Name = "Unbalancing Finisher";
+                            unbal.Illustration = new SideBySideIllustration(item.Illustration, IllustrationName.Trip);
+                            unbal.ActionCost = 1;
+                            unbal.Traits.Add(Finisher);
+                            return unbal;
+                        }
+                        else return null;
+                    }
+                });
+            }
         })
         .WithPrerequisite(sheet => sheet.AllFeats.Contains(PreciseStrike), "Precise Strike");
 
@@ -513,7 +698,7 @@ public class AddSwash
             };
         });
 
-    public static Feat OneForAll = new TrueFeat(ModManager.RegisterFeatName("One For All", "One For All {icon:Action}"), 1, "With precisely the right words of encouragement, you bolster an ally's efforts.", "Using one action, designate an ally within 30 feet. The next time that ally makes an attack roll or skill check, you may use your reaction to attempt a DC 20 Diplomacy check with the following effects:\n{b}Critical Success:{/b} You grant the ally a +2 circumstance bonus to their attack roll or skill check.\n{b}Success:{/b} You grant the ally a +1 cirsumstance bonus to their attack roll or skill check.\n{b}Critical Failure:{/b} The ally takes a -1 circumstance penalty to their attack roll or skill check.", new Trait[6] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.Linguistic, Trait.Mental, SwashTrait })
+    public static Feat OneForAll = new TrueFeat(ModManager.RegisterFeatName("One For All", "One For All {icon:Action}"), 1, "With precisely the right words of encouragement, you bolster an ally's efforts.", "Using one action, designate an ally within 30 feet. The next time that ally makes an attack roll or skill check, you may use your reaction to attempt a DC 20 Diplomacy check with the following effects:\n{b}Critical Success:{/b} You grant the ally a +2 circumstance bonus to their attack roll or skill check. If your swashbuckler style is Wit, you gain panache.\n{b}Success:{/b} You grant the ally a +1 circumstance bonus to their attack roll or skill check. If your swashbuckler style is Wit, you gain panache.\n{b}Critical Failure:{/b} The ally takes a -1 circumstance penalty to their attack roll or skill check.", new Trait[6] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.Linguistic, Trait.Mental, SwashTrait })
         .WithPermanentQEffect(null, delegate (QEffect qf)
         {
             qf.ProvideActionIntoPossibilitySection = (qfoneforall, section) =>
@@ -548,6 +733,10 @@ public class AddSwash
                                                 },
                                                 ExpiresAt = ExpirationCondition.Ephemeral
                                             });
+                                            if (caster.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Wit") ?? false)
+                                            {
+                                                caster.AddQEffect(CreatePanache());
+                                            }
                                             break;
                                         case CheckResult.Success:
                                             aided.Owner.AddQEffect(new QEffect()
@@ -558,6 +747,10 @@ public class AddSwash
                                                 },
                                                 ExpiresAt = ExpirationCondition.Ephemeral
                                             });
+                                            if (caster.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Wit") ?? false)
+                                            {
+                                                caster.AddQEffect(CreatePanache());
+                                            }
                                             break;
                                         case CheckResult.CriticalFailure:
                                             aided.Owner.AddQEffect(new QEffect()
@@ -815,6 +1008,41 @@ public class AddSwash
             };
         });
 
+    public static Feat SwaggeringInitiative = new TrueFeat(ModManager.RegisterFeatName("SwaggeringInitiative", "Swaggering Initiative"), 4, "You swagger readily into any battle.", "You gain a +2 circumstance bonus to initiative rolls.\nIn addition, when combat begins, you can drink one potion you're holding as a free action.", new Trait[1] { SwashTrait }, null)
+        .WithPermanentQEffect(delegate (QEffect qf)
+        {
+            qf.Owner.AddQEffect(new QEffect()
+            {
+                Id = QEffectId.IncredibleInitiative
+            });
+            qf.StartOfCombat = async delegate (QEffect swag)
+            {
+                Item potion = qf.Owner.PrimaryItem;
+                CombatAction quaff = new CombatAction(qf.Owner, potion.Illustration, "Drink", new Trait[1] { Trait.Manipulate }, "Drink your " + potion.Name + ".\n\n" + potion.Description, Target.Self())
+                    .WithEffectOnEachTarget(async (spell, caster, target, result) =>
+                    {
+                        potion.DrinkableEffect(spell, caster);
+                        Sfxs.Play(SfxName.DrinkPotion);
+                        qf.Owner.HeldItems.Remove(potion);
+                    });
+                if (potion.HasTrait(Trait.Drinkable) && potion.CannotDrinkBecause(qf.Owner) == null)
+                {
+                    if (await qf.Owner.Battle.AskForConfirmation(qf.Owner, potion.Illustration, "Would you like to quickly drink your " + potion.Name + "?", "Drink"))
+                    {
+                        qf.Owner.Battle.GameLoop.FullCast(quaff);
+                    }
+                }
+                else if (qf.Owner.SecondaryItem.HasTrait(Trait.Drinkable) && qf.Owner.SecondaryItem.CannotDrinkBecause(qf.Owner) == null)
+                {
+                    potion = qf.Owner.SecondaryItem;
+                    if (await qf.Owner.Battle.AskForConfirmation(qf.Owner, potion.Illustration, "Would you like to quickly drink your " + potion.Name + "?", "Drink"))
+                    {
+                        qf.Owner.Battle.GameLoop.FullCast(quaff);
+                    }
+                }
+            };
+        });
+
     public static Feat TwinParry = new TrueFeat(ModManager.RegisterFeatName("Twin Parry", "Twin Parry {icon:Action}"), 4, "You use your two weapons to parry attacks.", "You gain a +1 circumstance bonus to your AC until the start of your next turn, or a +2 circumstance bonus if either of the weapons you hold have the parry trait. You lose this circumstance bonus if you no longer meet this feat's requirements.", new Trait[3] { Trait.Fighter, Trait.Ranger, SwashTrait })
         .WithPermanentQEffect("You gain a circumstance bonus to AC using your two held weapons.", delegate (QEffect qf)
         {
@@ -859,7 +1087,7 @@ public class AddSwash
                                     };
                                     target.AddQEffect(parrybonus);
                                 })
-                                .WithSoundEffect(Audio.SfxName.RaiseShield));
+                                .WithSoundEffect(SfxName.RaiseShield));
                         }
                     }
                     return null;
@@ -870,9 +1098,10 @@ public class AddSwash
     {
         ModManager.AddFeat(Swashbuckler);
         //ModManager.AddFeat(AddPanache);
+        //ModManager.AddFeat(BonMot);
         ModManager.AddFeat(DisarmingFlair);
         ModManager.AddFeat(DuelingParry);
-        //ModManager.AddFeat(FlyingBlade);
+        ModManager.AddFeat(FlyingBlade);
         ReplaceYoureNext();
         ReplaceNimbleDodge();
         ModManager.AddFeat(GoadingFeint);
@@ -885,6 +1114,7 @@ public class AddSwash
         ModManager.AddFeat(TumbleBehind);
         ModManager.AddFeat(GuardiansDeflection); //BASICALLY COMPLETE
         ModManager.AddFeat(ImpalingFinisher);
+        ModManager.AddFeat(SwaggeringInitiative);
         ModManager.AddFeat(TwinParry);
     }
 }

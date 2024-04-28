@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "YUxdUVZLBFG9LUUhYXEbFu3idkWOiQV3ZpyX8qwVeEdT3WyDmw2e+zgajgsvjxnmzwHUwOob+hlXMpBi3Z7tjg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\sethr\\source\\repos\\ThicreanPhoenix\\SwashConnected\\Dawnbury.Mods.Phoenix.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\sethr\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\sethr\\.nuget\\packages\\system.data.datasetextensions\\4.5.0\\system.data.datasetextensions.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
