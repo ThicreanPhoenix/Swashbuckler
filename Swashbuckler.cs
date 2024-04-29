@@ -280,7 +280,7 @@ public class AddSwash
                     return new ActionPossibility(new CombatAction(qf.Owner, IllustrationName.FleetStep, "Tumble Through", new Trait[1] { Trait.Move }, "Move to a foe, then make an Acrobatics check. If you succeed, you can move an additional 5 feet.",
                         Target.Ranged(qf.Owner.Speed - 3)
                         .WithAdditionalConditionOnTargetCreature((Creature self, Creature enemy) =>
-                            ((enemy.Battle.Map.AllTiles.Where((Tile t) => ((t.DistanceTo(enemy.Occupies) == 1) && (t.GetWalkDifficulty(self) < 2))).Count() == 0)) ? Usability.NotUsableOnThisCreature("Cannot move out of target's space") : Usability.Usable))
+                            ((enemy.Battle.Map.AllTiles.Where((Tile t) => ((t.DistanceTo(enemy.Occupies) == 1) && (t.GetWalkDifficulty(self) < 2) && (t.IsGenuinelyFreeTo(self)))).Count() == 0)) ? Usability.NotUsableOnThisCreature("Cannot move out of target's space") : Usability.Usable))
                         .WithEffectOnChosenTargets(async delegate (CombatAction movement, Creature self, ChosenTargets targets)
                         {
                             Tile tile = targets.ChosenCreature!.Occupies;
@@ -1017,24 +1017,31 @@ public class AddSwash
             });
             qf.StartOfCombat = async delegate (QEffect swag)
             {
-                Item potion = qf.Owner.PrimaryItem;
-                CombatAction quaff = new CombatAction(qf.Owner, potion.Illustration, "Drink", new Trait[1] { Trait.Manipulate }, "Drink your " + potion.Name + ".\n\n" + potion.Description, Target.Self())
-                    .WithEffectOnEachTarget(async (spell, caster, target, result) =>
-                    {
-                        potion.DrinkableEffect(spell, caster);
-                        Sfxs.Play(SfxName.DrinkPotion);
-                        qf.Owner.HeldItems.Remove(potion);
-                    });
-                if (potion.HasTrait(Trait.Drinkable) && potion.CannotDrinkBecause(qf.Owner) == null)
+                if ((qf.Owner.PrimaryItem != null) && qf.Owner.PrimaryItem.HasTrait(Trait.Drinkable))
                 {
-                    if (await qf.Owner.Battle.AskForConfirmation(qf.Owner, potion.Illustration, "Would you like to quickly drink your " + potion.Name + "?", "Drink"))
+                    Item potion = qf.Owner.PrimaryItem;
+                    CombatAction quaff = new CombatAction(qf.Owner, potion.Illustration, "Drink", new Trait[1] { Trait.Manipulate }, "Drink your " + potion.Name + ".\n\n" + potion.Description, Target.Self())
+                        .WithEffectOnEachTarget(async (spell, caster, target, result) =>
+                        {
+                            potion.DrinkableEffect(spell, caster);
+                            Sfxs.Play(SfxName.DrinkPotion);
+                            qf.Owner.HeldItems.Remove(potion);
+                        });
+                    if (await qf.Owner.Battle.AskForConfirmation(qf.Owner, potion.Illustration, "Would you like to quickly drink your " + potion.Name + "?", "Drink")) 
                     {
                         qf.Owner.Battle.GameLoop.FullCast(quaff);
                     }
                 }
-                else if (qf.Owner.SecondaryItem.HasTrait(Trait.Drinkable) && qf.Owner.SecondaryItem.CannotDrinkBecause(qf.Owner) == null)
+                else if ((qf.Owner.SecondaryItem != null) && qf.Owner.SecondaryItem.HasTrait(Trait.Drinkable))
                 {
-                    potion = qf.Owner.SecondaryItem;
+                    Item potion = qf.Owner.SecondaryItem;
+                    CombatAction quaff = new CombatAction(qf.Owner, potion.Illustration, "Drink", new Trait[1] { Trait.Manipulate }, "Drink your " + potion.Name + ".\n\n" + potion.Description, Target.Self())
+                        .WithEffectOnEachTarget(async (spell, caster, target, result) =>
+                        {
+                            potion.DrinkableEffect(spell, caster);
+                            Sfxs.Play(SfxName.DrinkPotion);
+                            qf.Owner.HeldItems.Remove(potion);
+                        });
                     if (await qf.Owner.Battle.AskForConfirmation(qf.Owner, potion.Illustration, "Would you like to quickly drink your " + potion.Name + "?", "Drink"))
                     {
                         qf.Owner.Battle.GameLoop.FullCast(quaff);
