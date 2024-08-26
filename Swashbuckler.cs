@@ -1029,7 +1029,7 @@ public class AddSwash
                         });
                     if (await qf.Owner.Battle.AskForConfirmation(qf.Owner, potion.Illustration, "Would you like to quickly drink your " + potion.Name + "?", "Drink")) 
                     {
-                        qf.Owner.Battle.GameLoop.FullCast(quaff);
+                        await qf.Owner.Battle.GameLoop.FullCast(quaff);
                     }
                 }
                 else if ((qf.Owner.SecondaryItem != null) && qf.Owner.SecondaryItem.HasTrait(Trait.Drinkable))
@@ -1044,7 +1044,7 @@ public class AddSwash
                         });
                     if (await qf.Owner.Battle.AskForConfirmation(qf.Owner, potion.Illustration, "Would you like to quickly drink your " + potion.Name + "?", "Drink"))
                     {
-                        qf.Owner.Battle.GameLoop.FullCast(quaff);
+                        await qf.Owner.Battle.GameLoop.FullCast(quaff);
                     }
                 }
             };
