@@ -92,7 +92,7 @@ public class AddWeapons
                 );;
 
         ModManager.RegisterNewItemIntoTheShop("Bo Staff", itemName =>
-            new Item(IllustrationName.Quarterstaff, "bostaff", new Trait[] { Parry, Trait.Trip, Trait.Martial, Trait.Staff, Trait.Melee, Trait.TwoHanded, Trait.Reach, Trait.Club })
+            new Item(IllustrationName.Quarterstaff, "bostaff", new Trait[] { Parry, Trait.Trip, Trait.Martial, Trait.Staff, Trait.Melee, Trait.TwoHanded, Trait.Reach, Trait.Club, Trait.MonkWeapon })
             {
                 ItemName = itemName
             }

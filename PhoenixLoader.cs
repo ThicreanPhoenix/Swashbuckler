@@ -9,5 +9,6 @@ namespace Dawnsbury.Mods.Phoenix;
         {
         AddSwash.LoadSwash();
         AddWeapons.LoadWeapons();
+        AddMulticlassSwash.LoadMulticlassSwash();
         }
     }
