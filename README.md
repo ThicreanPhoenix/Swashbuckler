@@ -1,5 +1,7 @@
 # Swashbuckler
 
-This mod adds the Swashbuckler, a fast-moving, precise-striking melee combatant, as a playable class into the game, with 5 distinct styles, 22 brand new feats, and a unique intentional Tumble Through action.
+This mod adds the Swashbuckler, a fast-moving, precise-striking melee combatant, as a playable class into the game, with 5 distinct styles, 23 brand new feats, and the general feats Bon Mot and Fascinating Performance.
+
+It also adds the Swashbuckler multiclass archetype with 5 supporting feats.
 
 It also adds 2 weapons introducing the Parry trait: The bo staff and the main-gauche.
