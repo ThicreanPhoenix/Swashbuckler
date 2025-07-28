@@ -1,21 +1,22 @@
-﻿using Dawnsbury.Core;
+﻿using Dawnsbury.Audio;
+using Dawnsbury.Core;
 using Dawnsbury.Core.CombatActions;
-using Dawnsbury.Core.Creatures;
+using Dawnsbury.Core.Mechanics;
 using Dawnsbury.Core.Mechanics.Core;
 using Dawnsbury.Core.Mechanics.Enumerations;
 using Dawnsbury.Core.Mechanics.Targeting;
 using Dawnsbury.Core.Mechanics.Treasure;
-using Dawnsbury.Modding;
 using Dawnsbury.Core.Possibilities;
-using System.Linq;
-using Dawnsbury.Core.Mechanics;
 using Dawnsbury.Display.Illustrations;
-using Dawnsbury.Audio;
+using Dawnsbury.Modding;
+using System.Linq;
 
 namespace Dawnsbury.Mods.Phoenix;
 
 public class AddWeapons
 {
+    //TODO: Parry is offered twice for the bostaff.
+    //TODO: Apparently there are issues with ParryEffect between this mod and the Remaster Swash?
     public static QEffectId ParryEffect = ModManager.RegisterEnumMember<QEffectId>("ParryEffect");
     public static Trait Parry = ModManager.RegisterTrait("Parry", new TraitProperties("Parry", true, "This weapon can be used defensively to block attacks."));
 
@@ -84,7 +85,7 @@ public class AddWeapons
         });
 
         ModManager.RegisterNewItemIntoTheShop("Main-Gauche", itemName =>
-            new Item(IllustrationName.Dagger, "main-gauche", new Trait[] { Trait.Agile, Trait.Disarm, Trait.Finesse, Trait.VersatileS, Parry, Trait.Melee, Trait.Martial, Trait.Knife })
+            new Item(IllustrationName.Dagger, "main-gauche", new Trait[] { Trait.Agile, Trait.Disarm, Trait.Finesse, Trait.VersatileS, Parry, Trait.Martial, Trait.Knife })
                 {
                     ItemName = itemName
                 }
@@ -92,7 +93,7 @@ public class AddWeapons
                 );;
 
         ModManager.RegisterNewItemIntoTheShop("Bo Staff", itemName =>
-            new Item(IllustrationName.Quarterstaff, "bostaff", new Trait[] { Parry, Trait.Trip, Trait.Martial, Trait.Staff, Trait.Melee, Trait.TwoHanded, Trait.Reach, Trait.Club, Trait.MonkWeapon })
+            new Item(IllustrationName.Quarterstaff, "bostaff", new Trait[] { Parry, Trait.Trip, Trait.Martial, Trait.Staff, Trait.TwoHanded, Trait.Reach, Trait.Club, Trait.MonkWeapon })
             {
                 ItemName = itemName
             }

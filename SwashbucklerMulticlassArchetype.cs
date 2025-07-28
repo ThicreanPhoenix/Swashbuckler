@@ -1,21 +1,20 @@
-﻿using Dawnsbury.Core.CharacterBuilder;
+﻿using Dawnsbury.Core;
+using Dawnsbury.Core.CharacterBuilder;
 using Dawnsbury.Core.CharacterBuilder.Feats;
+using Dawnsbury.Core.CharacterBuilder.FeatsDb;
 using Dawnsbury.Core.CharacterBuilder.FeatsDb.TrueFeatDb.Archetypes;
+using Dawnsbury.Core.CombatActions;
 using Dawnsbury.Core.Creatures;
 using Dawnsbury.Core.Mechanics;
-using Dawnsbury.Core.Mechanics.Enumerations;
-using Dawnsbury.Modding;
-using Dawnsbury.Core;
 using Dawnsbury.Core.Mechanics.Core;
-using Dawnsbury.Mods.Phoenix;
+using Dawnsbury.Core.Mechanics.Enumerations;
+using Dawnsbury.Core.Mechanics.Rules;
+using Dawnsbury.Core.Mechanics.Treasure;
+using Dawnsbury.Display.Illustrations;
+using Dawnsbury.Modding;
 using System;
 using System.Collections.Generic;
-using Dawnsbury.Core.CharacterBuilder.FeatsDb;
 using System.Linq;
-using Dawnsbury.Core.Mechanics.Treasure;
-using Dawnsbury.Core.CombatActions;
-using Dawnsbury.Display.Illustrations;
-using Dawnsbury.Core.Mechanics.Rules;
 
 namespace Dawnsbury.Mods.Phoenix;
 
