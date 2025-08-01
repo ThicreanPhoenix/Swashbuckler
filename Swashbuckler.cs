@@ -389,15 +389,15 @@ public class AddSwash
                     Item playerWeapon = (action.Owner.DistanceTo(qf.Owner) > 1) ? qf.Owner.MeleeWeapons.FirstOrDefault((Item i) => i.HasTrait(Trait.Reach)) : qf.Owner.PrimaryWeapon;
                     if (playerWeapon == null) return;
                     Item enemyWeapon = action.Item;
-                    bool cannotDisarm = ((enemyWeapon == null) || enemyWeapon.HasTrait(Trait.Unarmed));
+                    bool cannotDisarm = ((enemyWeapon == null) || enemyWeapon.HasTrait(Trait.Unarmed) || (action.Owner.QEffects.FirstOrDefault((QEffect immuneDisarm) => immuneDisarm.Id == QEffectId.ImmunityToTargeting && (ActionId)immuneDisarm.Tag == ActionId.Disarm) != default));
                     Creature enemy2 = action.Owner;
                     if ((qf.Owner.HasFreeHand || qf.Owner.WieldsItem(Trait.Disarm)) && (!cannotDisarm))
                     {
                         switch ((await qf.Owner.AskForChoiceAmongButtons(new ModdedIllustration("PhoenixAssets/panache.png"), enemy2.Name + " has critically failed an attack against you. What do you wish to do?", "Disarm", "Strike", "Do not react")).Index)
                         {
                             case 0:
-                                Item disarmingWeapon = qf.Owner.HeldItems.First((Item i) => i.HasTrait(Trait.Disarm));
-                                if (disarmingWeapon == null)
+                                Item disarmingWeapon = qf.Owner.HeldItems.FirstOrDefault((Item i) => i.HasTrait(Trait.Disarm));
+                                if (disarmingWeapon == default)
                                 {
                                     disarmingWeapon = qf.Owner.UnarmedStrike;
                                 }
