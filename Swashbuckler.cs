@@ -3,6 +3,7 @@ using Dawnsbury.Core;
 using Dawnsbury.Core.CharacterBuilder;
 using Dawnsbury.Core.CharacterBuilder.AbilityScores;
 using Dawnsbury.Core.CharacterBuilder.Feats;
+using Dawnsbury.Core.CharacterBuilder.Feats.Features;
 using Dawnsbury.Core.CharacterBuilder.FeatsDb;
 using Dawnsbury.Core.CharacterBuilder.FeatsDb.Common;
 using Dawnsbury.Core.CharacterBuilder.Selections.Options;
@@ -175,16 +176,11 @@ public class AddSwash
             Trait.Will
         },
         4,
-        "{b}1. Panache.{/b} You learn how to leverage your skills to enter a state of heightened ability called panache. You gain panache when you succeed on certain skill checks with a bit of flair, including Tumble Through and other checks determined by your style. While you have panache, you gain a +5 circumstance bonus to your Speed and a +1 circumstance bonus to checks that would give you panache. It also allows you to use special attacks called finishers, which cause you to lose panache when performed.\n{i}(The automatic pathfinding will normally chart a path that doesn't require a tumble through if possible. To tumble through a creature on purpose, use the step-by-step stride option in the Other actions menu.){/i}\n{b}2. Swashbuckler style.{/b} You choose a style that represents what kind of flair you bring to a battlefield. When you choose a style, you become trained in a skill and can use certain actions using that skill to gain panache.\n{b}3. Precise Strike.{/b} While you have panache, you deal an extra 2 precision damage with your agile or finesse melee weapons. If you use a finisher, the damage increases to 2d6 instead.\n{b}4. Confident Finisher.{/b} If you have panache, you can use an action to make a Strike against an ally in melee range. If you miss, you deal half your Precise Strike damage.\n{b}5. Swashbuckler feat.{/b}" +
-        "\n\n{b}At Higher Levels:" +
-        "\nLevel 2:{/b} Swashbuckler feat." +
-        "\n{b}Level 3:{/b} General feat, skill increase, Opportune Riposte{i}(counterattack if an enemy critically fails to hit you){/i}, Vivacious Speed{i}(The status bonus from panache increases and you gain half of it even if you don't have panache){/i}" +
-        "\n{b}Level 4:{/b} Swashbuckler feat." +
-        "\n{b}Level 5:{/b} Ability boosts, ancestry feat, skill increase, precise strike 3d6, weapon expertise {i}(You gain expertise in simple and martial weapons, and gain access to the critical specialization effects of all weapons for which you have expert proficiency.){i}" +
-        "\n{b}Level 6:{/b} Swashbuckler feat." +
-        "\n{b}Level 7:{/b} Evasion {i}(Your proficiency in Reflex saves increases to master, and when you roll a success, you get a critical success instead.){/i}, general feat, vivacious speed 15 feet, weapon specialization {i}(You deal 2 additional damage using weapons with which you have expert proficiency).{/i}" +
-        "\n{b}Level 8:{/b} Swashbuckler feat." +
-        "\n{b}Level 9:{/b} Ancestry feat, precise strike 4d6, exemplary finisher {i}(you gain a special effect when you perform finishers based on your swashbuckler style){/i}, swashbuckler expertise {i}(you become an expert in your swashbuckler class DC).{/i}",
+        "{b}1. Panache.{/b} You learn how to leverage your skills to enter a state of heightened ability called panache. You gain panache when you succeed on certain skill checks with a bit of flair, including Tumble Through and other checks determined by your style. While you have panache, you gain a +5 circumstance bonus to your Speed and a +1 circumstance bonus to checks that would give you panache. It also allows you to use special attacks called finishers, which cause you to lose panache when performed.\n{i}(The automatic pathfinding will normally chart a path that doesn't require a tumble through if possible. To tumble through a creature on purpose, use the step-by-step stride option in the Other actions menu.){/i}" +
+        "\n{b}2. Swashbuckler style.{/b} You choose a style that represents what kind of flair you bring to a battlefield. When you choose a style, you become trained in a skill and can use certain actions using that skill to gain panache." +
+        "\n{b}3. Precise Strike.{/b} While you have panache, you deal an extra 2 precision damage with your agile or finesse melee weapons. If you use a finisher, the damage increases to 2d6 instead." +
+        "\n{b}4. Confident Finisher.{/b} If you have panache, you can use an action to make a Strike against an ally in melee range. If you miss, you deal half your Precise Strike damage." +
+        "\n{b}5. Swashbuckler feat.{/b}",
         new List<Feat>()
         {
             //Subclasses. For a swashbuckler, this is their styles.
@@ -335,6 +331,24 @@ public class AddSwash
                     }
                 })
         })
+        .WithClassFeatures(features =>
+        {
+            features.AddFeature(3, "opportune riposte", "counterattack if an enemy critically fails to hit you");
+            features.AddFeature(3, "vivacious speed", "the status bonus to Speed from panache increases to 10 feet and you gain half of it even if you don't have panache");
+            features.AddFeature(5, "precise strike 3d6");
+            features.AddFeature(5, "weapon expertise", "your proficiency with simple weapons, martial weapons, and unarmed strikes increases to expert. You gain access to the {tooltip:criteffect}critical specialization effects{/} of all weapons and unarmed attacks for which you have expert proficiency.");
+            features.AddFeature(7, WellKnownClassFeature.Evasion);
+            features.AddFeature(7, "vivacious speed +15 feet");
+            features.AddFeature(7, WellKnownClassFeature.WeaponSpecialization);
+            features.AddFeature(9, "exemplary finisher", "you gain a special effect when you perform finishers based on your swashbuckler style");
+            features.AddFeature(9, "precise strike 4d6");
+            features.AddFeature(9, "swashbuckler expertise", "your proficiency for your swashbuckler class DC increases to expert");
+            features.AddFeature(11, "vivacious speed +20 feet");
+            features.AddFeature(13, "precise strike 5d6");
+            features.AddFeature(15, "vivacious speed +25 feet");
+            features.AddFeature(17, "precise strike 6d6");
+            features.AddFeature(19, "vivacious speed +30 feet");
+        })
         .WithOnSheet(delegate (CalculatedCharacterSheetValues sheet)
             {
                 sheet.TrainInThisOrSubstitute(Skill.Acrobatics);
@@ -353,13 +367,9 @@ public class AddSwash
                     YouHaveCriticalSpecialization = (QEffect effect, Item item, CombatAction _, Creature _) => effect.Owner.Proficiencies.Get(item.Traits) >= Proficiency.Expert
                 });
             }
-
             if (creature.Level >= 7)
             {
-                creature.AddQEffect(new QEffect("Evasion", "When you roll a success on a Reflex save, you get a critical success instead.")
-                {
-                    AdjustSavingThrowCheckResult = (QEffect _, Defense defense, CombatAction _, CheckResult checkResult) => (defense != Defense.Reflex || checkResult != CheckResult.Success) ? checkResult : CheckResult.CriticalSuccess
-                });
+                creature.AddQEffect(QEffect.Evasion());
                 creature.AddQEffect(QEffect.WeaponSpecialization());
             }
         })
@@ -377,7 +387,7 @@ public class AddSwash
                 });
             });
 
-    //TODO: Restrict Opportune Riposte to only target the attacker, and hopefully also only to the attacking weapon.
+    //TODO: Restrict Opportune Riposte to only target the attacking weapon.
     public static readonly Feat OpportuneRiposte = new Feat(ModManager.RegisterFeatName("Opportune Riposte", "Opportune Riposte {icon:Reaction}"), "You take advantage of an opening from your foe's fumbled attack.", "When an enemy critically fails its Strike against you, you can use your reaction to make a melee Strike against that enemy or make a Disarm attempt.", new List<Trait>(), null)
         .WithPermanentQEffect("When an enemy critically fails a Strike against you, you may Strike or Disarm it using a reaction.", delegate (QEffect qf)
         {
@@ -497,10 +507,10 @@ public class AddSwash
         };
     }
   
-    public static readonly Feat VivaciousSpeed = new Feat(ModManager.RegisterFeatName("Vivacious Speed"), "When you've made an impression, you move even faster than normal, darting about the battlefield with incredible speed.", "The status bonus to your Speed from panache increases to 10 feet. When you don't have panache, you still get half this status bonus to your Speeds, rounded down to the nearest 5-foot increment.", new List<Trait>(), null)
+    public static readonly Feat VivaciousSpeed = new Feat(ModManager.RegisterFeatName("Vivacious Speed"), "When you've made an impression, you move even faster than normal, darting about the battlefield with incredible speed.", "The status bonus to your Speed from panache increases to 10 feet. When you don't have panache, you still get half this status bonus to your Speeds, rounded down to the nearest 5-foot increment. This bonus increases by 5 feet at 7th level.", new List<Trait>(), null)
         .WithPermanentQEffect("You move quickly, even when you don't have panache.", delegate (QEffect qf)
         {
-            qf.BonusToAllSpeeds = (QEffect qf) => (!qf.Owner.HasEffect(PanacheId)) ? new Bonus(1, BonusType.Status, "Vivacious Speed") : null;
+            qf.BonusToAllSpeeds = (QEffect qf) => (!qf.Owner.HasEffect(PanacheId)) ? new Bonus((((qf.Owner.Level - 3) / 4) + 2)/2, BonusType.Status, "Vivacious Speed") : null;
             qf.YouAcquireQEffect = delegate (QEffect qfThis, QEffect qfGet)
             {
                 if (qfGet.Id == PanacheId)
@@ -516,44 +526,7 @@ public class AddSwash
                 else return qfGet;
             };
         });
-    /*
-    public static readonly Feat TumbleThrough = new Feat(ModManager.RegisterFeatName("Tumble Through"), "You know how to better run circles around your enemies.", "Choose an enemy creature and attempt an Acrobatics check to Tumble Through them. If you succeed, you move into their space, then an additional 5 feet.", new List<Trait>(), null)
-        .WithPermanentQEffect(null, delegate (QEffect qf)
-        {
-            qf.ProvideActionIntoPossibilitySection = (qftumble, section) =>
-            {
-                if (section.PossibilitySectionId == PossibilitySectionId.OtherManeuvers)
-                {
-                    return new ActionPossibility(new CombatAction(qf.Owner, IllustrationName.FleetStep, "Tumble Through", new Trait[1] { Trait.Move }, "Move to a foe, then make an Acrobatics check. If you succeed, you can move an additional 5 feet.",
-                        Target.Ranged(qf.Owner.Speed - 3)
-                        .WithAdditionalConditionOnTargetCreature((Creature self, Creature enemy) =>
-                            ((enemy.Battle.Map.AllTiles.Where((Tile t) => ((t.DistanceTo(enemy.Occupies) == 1) && (t.GetWalkDifficulty(self) < 2) && (t.IsGenuinelyFreeTo(self)))).Count() == 0)) ? Usability.NotUsableOnThisCreature("Cannot move out of target's space") : Usability.Usable))
-                        .WithEffectOnChosenTargets(async delegate (CombatAction movement, Creature self, ChosenTargets targets)
-                        {
-                            Tile tile = targets.ChosenCreature!.Occupies;
-                            if (movement.CheckResult >= CheckResult.Success)
-                            {
-                                tile.PrimaryOccupant = null;
-                                bool WasDifficultTerrain = tile.DifficultTerrain;
-                                tile.DifficultTerrain = true;
-                                await self.StrideAsync("Move to the target.", false, false, tile, false, false, false);
-                                await self.StrideAsync("Choose a new space to move to.", false, true, null, false, false, false);
-                                if (WasDifficultTerrain == false)
-                                {
-                                    tile.DifficultTerrain = false;
-                                }
-                                tile.PrimaryOccupant = targets.ChosenCreature;
-                            }
-                            else await self.StrideAsync("Choose a space to move to. You must end adjacent to the enemy you attempted to Tumble through.", false, false, tile, false, false, true);
-                        })
-                        .WithActionId(ActionId.TumbleThrough)
-                        .WithActionCost(1)
-                        .WithActiveRollSpecification(new ActiveRollSpecification(TaggedChecks.SkillCheck(Skill.Acrobatics), Checks.DefenseDC(Defense.Reflex))));
-                }
-                else return null;
-            };
-        });
-    */
+
     //Implemented as far as I'm aware, but the AI will never use the retort. Needs goodness.
     public static Feat BonMot = new TrueFeat(ModManager.RegisterFeatName("BonMot", "Bon Mot {icon:Action}"), 1, "You launch an insightful quip at a foe, distracting them.", "Using one action, choose a foe within 30 feet of you and make a Diplomacy check against their Will DC, with the following effects:" + S.FourDegreesOfSuccess("The target is distracted and takes a -3 status penalty to Perception and to Will saves for 1 minute. The target can end the effect early by using a single action to retort to your quip.", "As success, but the penalty is -2.", null, "Your quip is atrocious. You take the same penalty an enemy would take had you succeeded. This lasts for one minute or until you use another Bon Mot and succeed."), new Trait[6] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.General, Trait.Linguistic, Trait.Mental }, null)
         .WithPermanentQEffect(null, delegate (QEffect qf)
@@ -1006,14 +979,15 @@ public class AddSwash
                     }
                 }
             };
-        });
+        })
+        .WithPrerequisite((CalculatedCharacterSheetValues values) => values.GetProficiency(Trait.Deception) >= Proficiency.Trained, "You must be trained in Deception");
 
     public static Feat OneForAll = new TrueFeat(ModManager.RegisterFeatName("One For All", "One For All {icon:Action}"), 1, "With precisely the right words of encouragement, you bolster an ally's efforts.", "Using one action, designate an ally within 30 feet. The next time that ally makes an attack roll or skill check, you may use your reaction to attempt a DC 20 Diplomacy check with the following effects:\n{b}Critical Success:{/b} You grant the ally a +2 circumstance bonus to their attack roll or skill check. If your swashbuckler style is Wit, you gain panache.\n{b}Success:{/b} You grant the ally a +1 circumstance bonus to their attack roll or skill check. If your swashbuckler style is Wit, you gain panache.\n{b}Critical Failure:{/b} The ally takes a -1 circumstance penalty to their attack roll or skill check.", new Trait[6] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.Linguistic, Trait.Mental, SwashTrait })
         .WithPermanentQEffect(null, delegate (QEffect qf)
         {
             qf.ProvideActionIntoPossibilitySection = (qfoneforall, section) =>
             {
-                if (section.PossibilitySectionId == PossibilitySectionId.OtherManeuvers)
+                if (section.PossibilitySectionId == PossibilitySectionId.SkillActions)
                 {
                     bool aidPrepareIdExists = ModManager.TryParse<ActionId>("PrepareToAid", out ActionId aidPrepareId);
                     return new ActionPossibility(new CombatAction(qf.Owner, IllustrationName.SoundBurst, "One For All", new Trait[5] { Trait.Auditory, Trait.Concentrate, Trait.Emotion, Trait.Linguistic, Trait.Mental }, "Attempt to assist an ally's next skill check or attack roll.", Target.RangedFriend(6)
@@ -1378,27 +1352,28 @@ public class AddSwash
                     return new ActionPossibility(new CombatAction(effect.Owner, IllustrationName.WarpStep, "Leading Dance", new Trait[] { Trait.Move }, "Attempt a Performance check against an adjacent enemy's Will DC. If you have the Battledancer swashbuckler style and you succeed, you gain panache." + S.FourDegreesOfSuccess("Your foe is swept up in your dance. You move up to 10 feet, and the enemy follows you. Your movement doesn't trigger reactions (and the enemy's movement doesn't trigger reactions because it's forced movement).", "As critical success, but you both only move 5 feet.", "The foe doesn't follow your steps. You can move 5 feet if you choose, but this movement triggers reactions normally.", "You stumble, falling prone in your space."),
                             Target.Touch())
                         .WithActionCost(1)
+                        .WithShortDescription("Attempt to move yourself and a foe.")
                         .WithActiveRollSpecification(new ActiveRollSpecification(TaggedChecks.SkillCheck(Skill.Performance), Checks.DefenseDC(Defense.Will)))
                         .WithEffectOnEachTarget(async (spell, caster, target, result) =>
                         {
+                            QEffect noReactions = new QEffect()
+                            {
+                                Id = QEffectId.IgnoreAoOWhenMoving
+                            };
                             switch (result)
                             {
                                 case CheckResult.CriticalSuccess:
+                                    caster.AddQEffect(noReactions);
                                     await caster.StrideAsync("Choose a location to move to.", false, true, null, false, true, false);
                                     await caster.StrideAsync("Choose a location to move to.", false, true, null, false, true, false);
                                     await caster.PullCreature(target);
-                                    if (caster.HasFeat(BattledancerStyle))
-                                    {
-                                        caster.AddQEffect(CreatePanache(Skill.Performance));
-                                    }
+                                    caster.RemoveAllQEffects((QEffect qf) => qf == noReactions);
                                     break;
                                 case CheckResult.Success:
+                                    caster.AddQEffect(noReactions);
                                     await caster.StrideAsync("Choose a location to move to.", false, true, null, false, true, false);
                                     await caster.PullCreature(target);
-                                    if (caster.HasFeat(BattledancerStyle))
-                                    {
-                                        caster.AddQEffect(CreatePanache(Skill.Performance));
-                                    }
+                                    caster.RemoveAllQEffects((QEffect qf) => qf == noReactions);
                                     break;
                                 case CheckResult.Failure:
                                     await caster.StrideAsync("Choose a location to move to.", false, true, null, false, true, false);
@@ -1407,12 +1382,16 @@ public class AddSwash
                                     await caster.FallProne();
                                     break;
                             }
+                            if ((result >= CheckResult.Success) && caster.HasFeat(BattledancerStyle))
+                            {
+                                caster.AddQEffect(CreatePanache(Skill.Performance));
+                            }
                         }));
                 }
                 else return null;
             };
         })
-        .WithPrerequisite(FeatName.Performance, "Must be trained in Performance.");
+        .WithPrerequisite((CalculatedCharacterSheetValues values) => values.GetProficiency(Trait.Performance) >= Proficiency.Trained, "You must be trained in Performance.");
 
     public static Feat SwaggeringInitiative = new TrueFeat(ModManager.RegisterFeatName("SwaggeringInitiative", "Swaggering Initiative"), 4, "You swagger readily into any battle.", "You gain a +2 circumstance bonus to initiative rolls.\nIn addition, when combat begins, you can drink one potion you're holding as a free action.", new Trait[1] { SwashTrait }, null)
         .WithPermanentQEffect(delegate (QEffect qf)
@@ -1853,7 +1832,7 @@ public class AddSwash
         ModManager.AddFeat(GuardiansDeflection);
         GiveGuardiansDeflectionToFighters();
         ModManager.AddFeat(ImpalingFinisher);
-        //ModManager.AddFeat(LeadingDance);
+        ModManager.AddFeat(LeadingDance);
         ModManager.AddFeat(SwaggeringInitiative);
         ModManager.AddFeat(TwinParry);
         ReplaceOpportunityAttack();

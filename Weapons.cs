@@ -86,18 +86,15 @@ public class AddWeapons
 
         ModManager.RegisterNewItemIntoTheShop("Main-Gauche", itemName =>
             new Item(IllustrationName.Dagger, "main-gauche", new Trait[] { Trait.Agile, Trait.Disarm, Trait.Finesse, Trait.VersatileS, Parry, Trait.Martial, Trait.Knife })
-                {
-                    ItemName = itemName
-                }
-                .WithWeaponProperties(new WeaponProperties("1d4", DamageKind.Piercing))
-                );;
-
-        ModManager.RegisterNewItemIntoTheShop("Bo Staff", itemName =>
-            new Item(IllustrationName.Quarterstaff, "bostaff", new Trait[] { Parry, Trait.Trip, Trait.Martial, Trait.Staff, Trait.TwoHanded, Trait.Reach, Trait.Club, Trait.MonkWeapon })
             {
                 ItemName = itemName
-            }
-                .WithWeaponProperties(new WeaponProperties("1d8", DamageKind.Bludgeoning)));
+            }.WithWeaponProperties(new WeaponProperties("1d4", DamageKind.Piercing)));
+
+        ModManager.RegisterNewItemIntoTheShop("Bo Staff", itemName =>
+            new Item(IllustrationName.Quarterstaff, "bostaff", new Trait[] { Parry, Trait.Trip, Trait.Martial, Trait.Staff, Trait.TwoHanded, Trait.Reach, Trait.Club, Trait.MonkWeapon, Trait.NonMetallic })
+            {
+                ItemName = itemName
+            }.WithWeaponProperties(new WeaponProperties("1d8", DamageKind.Bludgeoning)));
         
     }
 }

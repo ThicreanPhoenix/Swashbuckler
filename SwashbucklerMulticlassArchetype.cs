@@ -34,7 +34,7 @@ public class AddMulticlassSwash
         }
     }
 
-    public static Feat MulticlassSwashDedication = ArchetypeFeats.CreateMulticlassDedication(AddSwash.SwashTrait, "", "Choose a swashbuckler style. You gain the panache class feature, and can gain panache in all the ways a swashbuckler of your style can. You become trained in Acrobatics or the skill associated with your style. You also become trained in swashbuckler class DC. You don't gain any other effects of your chosen style.", GetSwashArchetypeSubclasses().ToList()).WithDemandsAbility14(Ability.Dexterity).WithDemandsAbility14(Ability.Charisma)
+    public static Feat MulticlassSwashDedication = ArchetypeFeats.CreateMulticlassDedication(AddSwash.SwashTrait, "You've learned to move and fight with style and swagger.", "Choose a swashbuckler style. You gain the panache class feature, and can gain panache in all the ways a swashbuckler of your style can. You become trained in Acrobatics or the skill associated with your style. You also become trained in swashbuckler class DC. You don't gain any other effects of your chosen style.", GetSwashArchetypeSubclasses().ToList()).WithDemandsAbility14(Ability.Dexterity).WithDemandsAbility14(Ability.Charisma)
         .WithOnCreature(delegate (Creature swash)
         {
             swash.AddQEffect(AddSwash.PanacheGranter());
