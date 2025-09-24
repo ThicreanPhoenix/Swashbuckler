@@ -9,6 +9,7 @@ using Dawnsbury.Core.Mechanics.Treasure;
 using Dawnsbury.Core.Possibilities;
 using Dawnsbury.Display.Illustrations;
 using Dawnsbury.Modding;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Dawnsbury.Mods.Phoenix;
@@ -47,8 +48,23 @@ public class AddWeapons
             }
         };
     }
+    
+    public static ItemName MainGauche = ModManager.RegisterNewItemIntoTheShop("Main-Gauche", (itemName) =>
+    {
+        return new Item(itemName, IllustrationName.Dagger, "main-gauche", 0, 0, new Trait[] { Trait.Agile, Trait.Disarm, Trait.Finesse, Trait.VersatileS, Parry, Trait.Martial, Trait.Knife })
+            .WithWeaponProperties(new WeaponProperties("1d4", DamageKind.Piercing));
+    });
+
+    public static ItemName BoStaff = ModManager.RegisterNewItemIntoTheShop("Bo Staff", (itemName) =>
+    {
+        return new Item(itemName, IllustrationName.Quarterstaff, "bostaff", 0, 0, new Trait[] { Parry, Trait.Trip, Trait.Martial, Trait.Staff, Trait.TwoHanded, Trait.Reach, Trait.Club, Trait.MonkWeapon, Trait.NonMetallic })
+            .WithWeaponProperties(new WeaponProperties("1d8", DamageKind.Bludgeoning));
+    });
+
+    
     public static void LoadWeapons()
     {
+        List<ItemName> items = new List<ItemName>() { MainGauche, BoStaff };
         ModManager.RegisterActionOnEachCreature((creature) =>
         {
             creature.AddQEffect(new QEffect()
@@ -83,18 +99,5 @@ public class AddWeapons
                 }
             });
         });
-
-        ModManager.RegisterNewItemIntoTheShop("Main-Gauche", itemName =>
-            new Item(IllustrationName.Dagger, "main-gauche", new Trait[] { Trait.Agile, Trait.Disarm, Trait.Finesse, Trait.VersatileS, Parry, Trait.Martial, Trait.Knife })
-            {
-                ItemName = itemName
-            }.WithWeaponProperties(new WeaponProperties("1d4", DamageKind.Piercing)));
-
-        ModManager.RegisterNewItemIntoTheShop("Bo Staff", itemName =>
-            new Item(IllustrationName.Quarterstaff, "bostaff", new Trait[] { Parry, Trait.Trip, Trait.Martial, Trait.Staff, Trait.TwoHanded, Trait.Reach, Trait.Club, Trait.MonkWeapon, Trait.NonMetallic })
-            {
-                ItemName = itemName
-            }.WithWeaponProperties(new WeaponProperties("1d8", DamageKind.Bludgeoning)));
-        
     }
 }
