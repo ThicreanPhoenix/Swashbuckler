@@ -10,6 +10,7 @@ using Dawnsbury.Core.Mechanics.Core;
 using Dawnsbury.Core.Mechanics.Enumerations;
 using Dawnsbury.Core.Mechanics.Rules;
 using Dawnsbury.Core.Mechanics.Treasure;
+using Dawnsbury.Core.Roller;
 using Dawnsbury.Display.Illustrations;
 using Dawnsbury.Modding;
 using System;
@@ -29,7 +30,7 @@ public class AddMulticlassSwash
                 .WithOnSheet(delegate (CalculatedCharacterSheetValues sheet)
                 {
                     sheet.TrainInThisOrThisOrSubstitute(Skill.Acrobatics, style2.Skill);
-                    sheet.AddFeatForPurposesOfPrerequisitesOnly(style);
+                    sheet.AddFeatForPurposesOfPrerequisitesOnly(style.FeatName);
                 });
         }
     }
@@ -50,10 +51,30 @@ public class AddMulticlassSwash
         })
         .WithOnSheet(delegate (CalculatedCharacterSheetValues sheet)
         {
+            //sheet.AddFeatForPurposesOfPrerequisitesOnly(AddSwash.PreciseStrike);
             sheet.AddFeat(AddSwash.PreciseStrike!, null);
         })
         .WithPermanentQEffect(null, delegate (QEffect qf)
         {
+            /*
+            qf.YouDealDamageWithStrike = delegate (QEffect qf, CombatAction action, DiceFormula diceFormula, Creature defender)
+            {
+                bool flag = action.HasTrait(Trait.Agile) || action.HasTrait(Trait.Finesse);
+                bool flag2 = action.Owner.HasEffect(AddSwash.PanacheId);
+                bool flag3 = action.HasTrait(AddSwash.Finisher);
+                bool flag4 = !action.HasTrait(Trait.Ranged) || (action.HasTrait(Trait.Thrown) && (action.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Flying Blade") ?? false) && (defender.DistanceTo(qf.Owner) <= action.Item!.WeaponProperties!.RangeIncrement));
+                bool flag5 = defender.IsImmuneTo(Trait.PrecisionDamage);
+                if (flag && flag3 && flag4 && (!flag5))
+                {
+                    return diceFormula.Add(DiceFormula.FromText("1d6", "Precise Strike"));
+                }
+                else if (flag && flag2 && flag4 && (!flag5))
+                {
+                    return diceFormula.Add(DiceFormula.FromText("1", "Precise Strike"));
+                }
+                return diceFormula;
+            };
+            */
             qf.ProvideStrikeModifier = delegate (Item item)
             {
                 StrikeModifiers basic = new StrikeModifiers();

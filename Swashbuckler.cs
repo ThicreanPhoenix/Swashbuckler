@@ -14,6 +14,7 @@ using Dawnsbury.Core.Mechanics.Core;
 using Dawnsbury.Core.Mechanics.Enumerations;
 using Dawnsbury.Core.Mechanics.Rules;
 using Dawnsbury.Core.Mechanics.Targeting;
+using Dawnsbury.Core.Mechanics.Targeting.Targets;
 using Dawnsbury.Core.Mechanics.Treasure;
 using Dawnsbury.Core.Possibilities;
 using Dawnsbury.Core.Roller;
@@ -22,11 +23,11 @@ using Dawnsbury.Display;
 using Dawnsbury.Display.Illustrations;
 using Dawnsbury.Display.Text;
 using Dawnsbury.Modding;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Microsoft.Xna.Framework;
 
 namespace Dawnsbury.Mods.Phoenix;
 
@@ -35,6 +36,7 @@ public class AddSwash
     public static Trait SwashTrait = ModManager.RegisterTrait("SwashTrait", new TraitProperties("Swashbuckler", true) { IsClassTrait = true });
     public static Trait SwashStyle = ModManager.RegisterTrait("SwashStyle", new TraitProperties("Swashbuckler Style", false));
     public static Trait Finisher = ModManager.RegisterTrait("Finisher", new TraitProperties("Finisher", true, "You can only use an action with the Finisher trait if you have panache, and you lose panache after performing the action.", true));
+    public static Trait OpportuneRiposteTrait = ModManager.RegisterTrait("OpportuneRiposteTrait", new TraitProperties("Opportune Riposte", false));
     public static QEffectId PanacheId = ModManager.RegisterEnumMember<QEffectId>("Panache");
     public static QEffectId FascinatedId = ModManager.RegisterEnumMember<QEffectId>("Fascinated");
     public static QEffectId PreciseFinisherQEffectId = ModManager.RegisterEnumMember<QEffectId>("PreciseFinisherQEffectId");
@@ -398,52 +400,65 @@ public class AddSwash
             sheet.IncreaseProficiency(17, Trait.Will, Proficiency.Master);
         });
 
-    //TODO: Restrict Opportune Riposte to only target the attacking weapon.
     public static readonly Feat OpportuneRiposte = new Feat(ModManager.RegisterFeatName("Opportune Riposte", "Opportune Riposte {icon:Reaction}"), "You take advantage of an opening from your foe's fumbled attack.", "When an enemy critically fails its Strike against you, you can use your reaction to make a melee Strike against that enemy or make a Disarm attempt.", new List<Trait>(), null)
         .WithPermanentQEffect("When an enemy critically fails a Strike against you, you may Strike or Disarm it using a reaction.", delegate (QEffect qf)
         {
             qf.AfterYouAreTargeted = async delegate (QEffect qf, CombatAction action)
             {
-                bool canReach = (qf.Owner.DistanceTo(action.Owner) == 1) || ((qf.Owner.DistanceTo(action.Owner) <= 2) && qf.Owner.WieldsItem(Trait.Reach)); //This is a brute force method of figuring out reach. I intend to make it more efficient later.
-                if (canReach && qf.Owner.Actions.CanTakeReaction() && action.HasTrait(Trait.Strike) && action.CheckResult == CheckResult.CriticalFailure)
+                bool IsStrikeOk(CombatAction strike)
                 {
-                    Item playerWeapon = (action.Owner.DistanceTo(qf.Owner) > 1) ? qf.Owner.MeleeWeapons.FirstOrDefault((Item i) => i.HasTrait(Trait.Reach)) : qf.Owner.PrimaryWeapon;
-                    if (playerWeapon == null) return;
-                    Item enemyWeapon = action.Item;
-                    bool cannotDisarm = ((enemyWeapon == null) || enemyWeapon.HasTrait(Trait.Unarmed) || (action.Owner.QEffects.FirstOrDefault((QEffect immuneDisarm) => immuneDisarm.Id == QEffectId.ImmunityToTargeting && (ActionId)immuneDisarm.Tag == ActionId.Disarm) != default));
-                    Creature enemy2 = action.Owner;
-                    if ((qf.Owner.HasFreeHand || qf.Owner.WieldsItem(Trait.Disarm)) && (!cannotDisarm))
+                    if ((bool)strike.CanBeginToUse(qf.Owner) && strike.Target is CreatureTarget creatureTarget)
                     {
-                        switch ((await qf.Owner.AskForChoiceAmongButtons(new ModdedIllustration("PhoenixAssets/panache.png"), enemy2.Name + " has critically failed an attack against you. What do you wish to do?", "Disarm", "Strike", "Do not react")).Index)
+                        return creatureTarget.IsLegalTarget(qf.Owner, action.Owner);
+                    }
+                    return false;
+                }
+
+                CombatAction CreateOpportuneRiposteFromWeapon(Item weapon)
+                {
+                    CombatAction combatAction2 = qf.Owner.CreateStrike(weapon, -1).WithActionCost(0);
+                    combatAction2.Traits.AddRange(new Trait[] { OpportuneRiposteTrait, Trait.ReactiveAttack });
+                    return combatAction2;
+                }
+
+                CombatAction CreateOpportuneDisarmFromWeapon(Item weapon)
+                {
+                    CombatAction combatAction2 = CombatManeuverPossibilities.CreateDisarmAction(qf.Owner, weapon).WithActionCost(0);
+                    combatAction2.Traits.AddRange(new Trait[] { OpportuneRiposteTrait, Trait.ReactiveAttack });
+                    return combatAction2;
+                }
+
+                List<CombatAction> possibleDisarms = qf.Owner.MeleeWeapons.Select(CreateOpportuneDisarmFromWeapon).Where(IsStrikeOk).ToList();
+                List<CombatAction> possibleStrikes = qf.Owner.MeleeWeapons.Select(CreateOpportuneRiposteFromWeapon).Where(IsStrikeOk).ToList();
+
+                if (action.HasTrait(Trait.Strike) && (action.CheckResult == CheckResult.CriticalFailure))
+                {
+                    if (possibleDisarms.Any() && possibleStrikes.Any())
+                    {
+                        switch(await qf.Owner.Battle.AskToUseReaction(qf.Owner, action.Owner.Name + " has critically failed a Strike against you! What woud you like to do?", new ModdedIllustration("PhoenixAssets/panache.png"), new Trait[] { OpportuneRiposteTrait }, "Disarm", "Strike"))
                         {
                             case 0:
-                                Item disarmingWeapon = qf.Owner.HeldItems.FirstOrDefault((Item i) => i.HasTrait(Trait.Disarm));
-                                if (disarmingWeapon == default)
-                                {
-                                    disarmingWeapon = qf.Owner.UnarmedStrike;
-                                }
-                                CombatAction disarm2 = CombatManeuverPossibilities.CreateDisarmAction(qf.Owner, disarmingWeapon).WithActionCost(0);
-                                disarm2.Target = Target.ReachWithAnyWeapon().WithAdditionalConditionOnTargetCreature((Creature self, Creature enemy) => enemy == action.Owner ? Usability.Usable : Usability.NotUsableOnThisCreature("not attacker"));
-                                disarm2.ChosenTargets = ChosenTargets.CreateSingleTarget(enemy2);
-                                await disarm2.AllExecute();
-                                qf.Owner.Actions.UseUpReaction();
+                                CombatAction disarm = possibleDisarms[0];
+                                disarm.ChosenTargets = ChosenTargets.CreateSingleTarget(action.Owner);
+                                //Item heldWeapon = action.Owner.HeldItems.FirstOrDefault((Item i) => i != action.Item);
+                                //if (heldWeapon != default) action.Owner.HeldItems.Remove(heldWeapon);
+                                await disarm.AllExecute();
+                                //if (heldWeapon != default) action.Owner.AddHeldItem(heldWeapon);
                                 break;
                             case 1:
-                                await qf.Owner.MakeStrike(enemy2, playerWeapon, 0);
-                                qf.Owner.Actions.UseUpReaction();
+                                CombatAction strike = possibleStrikes[0];
+                                strike.ChosenTargets = ChosenTargets.CreateSingleTarget(action.Owner);
+                                await strike.AllExecute();
                                 break;
                         }
                     }
-                    else if (await qf.Owner.Battle.AskToUseReaction(qf.Owner, enemy2.Name + " has critically failed an attack against you. Would you like to use your reaction to riposte and make a Strike?"))
-                    {
-                        await qf.Owner.MakeStrike(enemy2, playerWeapon, 0);
-                    }
+                    else await CommonCombatActions.OfferAndMakeReactiveStrike(qf.Owner, action.Owner, action.Owner + " has critically failed a Strike against you. Would you like to use Opportune Riposte to make a Strike?", "opportune riposte", 1, new Trait[] { Trait.ReactiveAttack, OpportuneRiposteTrait });
                 }
             };
         });
 
     public static readonly Feat Confident = new Feat(ModManager.RegisterFeatName("Confident Finisher", "Confident Finisher{icon:Action}"), "You gain an elegant finishing move that you can use when you have panache.", "If you have panache, you can make a Strike that deals damage even on a failure.", new List<Trait>(), null)
-        .WithPermanentQEffect("If you have panache, you can make a Strike that deals damage even on a failure.", delegate (QEffect qf)
+        .WithPermanentQEffect(null, delegate (QEffect qf)
         {
             qf.ProvideStrikeModifier = delegate (Item item)
             {
@@ -478,7 +493,6 @@ public class AddSwash
     public static readonly Feat PreciseStrike = new Feat(ModManager.RegisterFeatName("PreciseStrike", "Precise Strike"), "You strike with flair.", "When you have panache and make a Strike with a melee agile or finesse weapon or an agile or finesse unarmed strike, you deal 2 extra damage. This damage is 2d6 instead if the Strike was part of a finisher.", new List<Trait>(), null)
         .WithPermanentQEffect("While you have panache, you deal more damage when using agile or finesse weapons.", delegate (QEffect qf)
         {
-            qf.Name = "Precise Strike";
             qf.YouDealDamageWithStrike = delegate (QEffect qf, CombatAction action, DiceFormula diceFormula, Creature defender)
             {
                 bool flag = action.HasTrait(Trait.Agile) || action.HasTrait(Trait.Finesse);
@@ -488,11 +502,11 @@ public class AddSwash
                 bool flag5 = defender.IsImmuneTo(Trait.PrecisionDamage);
                 if (flag && flag3 && flag4 && (!flag5))
                 {
-                    return diceFormula.Add(!(qf.Owner.PersistentCharacterSheet.Class.FeatName == Swashbuckler.FeatName) ? DiceFormula.FromText("1d6") : DiceFormula.FromText((((qf.Owner.Level - 1) / 4) + 2).ToString() + "d6", "Precise Strike"));
+                    return diceFormula.Add(!(qf.Owner.PersistentCharacterSheet.Class.FeatName == Swashbuckler.FeatName) ? DiceFormula.FromText("1d6", "Precise Strike") : DiceFormula.FromText((((qf.Owner.Level - 1) / 4) + 2).ToString() +"d6", "Precise Strike"));
                 }
                 else if (flag && flag2 && flag4 && (!flag5))
                 {
-                    return diceFormula.Add(!(qf.Owner.PersistentCharacterSheet.Class.FeatName == Swashbuckler.FeatName) ? DiceFormula.FromText("1") : DiceFormula.FromText((((qf.Owner.Level - 1) / 4) + 2).ToString(), "Precise Strike"));
+                    return diceFormula.Add(!(qf.Owner.PersistentCharacterSheet.Class.FeatName == Swashbuckler.FeatName) ? DiceFormula.FromText("1", "Precise Strike") : DiceFormula.FromText((((qf.Owner.Level - 1) / 4) + 2).ToString(), "Precise Strike"));
                 }
                 return diceFormula;
             };
@@ -767,7 +781,7 @@ public class AddSwash
     }
 
     //Grants thrown versions of Confident Finisher, Unbalancing Finisher, Bleeding Finisher, and Stunning Finisher, as long as your weapons meet the criteria. It's usually down to GM judgement which finishers Flying Blade applies to anyway.
-    public static Feat FlyingBlade = new TrueFeat(ModManager.RegisterFeatName("FlyingBlade", "Flying Blade"), 1, "You've learned to apply your flashy techniques to thrown weapons just as easily as melee.", "When you have panache, you apply your additional damage from Precise Strike on ranged Strikes you make with a thrown weapon within its first range increment. The thrown weapon must be an agile or finesse weapon.\n\nAdditionally, if you have the following finishers available to you, you can perform them with thrown weapons: Confident Finisher, Unbalancing Finisher, Bleeding Finisher, Stunning Finisher.", new Trait[1] { SwashTrait }, null)
+    public static Feat FlyingBlade = new TrueFeat(ModManager.RegisterFeatName("FlyingBlade", "Flying Blade"), 1, "You've learned to apply your flashy techniques to thrown weapons just as easily as melee.", "When you have panache, you apply your additional damage from Precise Strike on ranged Strikes you make with a thrown weapon within its first range increment. The thrown weapon must be an agile or finesse weapon.\n\nAdditionally, if you have the following finishers available to you, you can perform them with thrown weapons: Confident Finisher, Basic Finisher, Unbalancing Finisher, Bleeding Finisher, Stunning Finisher.", new Trait[1] { SwashTrait }, null)
         .WithPrerequisite(sheet => sheet.AllFeats.Contains(PreciseStrike), "You must have the Precise Strike feature.")
         .WithPermanentQEffect(null, delegate (QEffect qf)
         {
@@ -778,7 +792,7 @@ public class AddSwash
                     ProvideStrikeModifier = delegate (Item item)
                     {
                         StrikeModifiers strikeModifiers8 = new StrikeModifiers();
-                        bool flag23 = (item.HasTrait(Trait.Thrown10Feet) || item.HasTrait(Trait.Thrown20Feet)) && (item.HasTrait(Trait.Agile) || item.HasTrait(Trait.Finesse) || item.HasTrait(Trait.Unarmed));
+                        bool flag23 = (item.HasTrait(Trait.Thrown10Feet) || item.HasTrait(Trait.Thrown20Feet)) && (item.HasTrait(Trait.Agile) || item.HasTrait(Trait.Finesse));
                         bool flag24 = qf.Owner.HasEffect(PanacheId);
                         if (flag23 && flag24)
                         {
@@ -787,36 +801,58 @@ public class AddSwash
                             confthrow.Illustration = new SideBySideIllustration(item.Illustration, IllustrationName.StarHit);
                             if (qf.Owner.Level < 5)
                             {
-                                confthrow.Description = StrikeRules.CreateBasicStrikeDescription(confthrow.StrikeModifiers, null, null, null, "The target takes 2d6/2 damage.", "You lose panache, whether the attack succeeds or fails. The weapon falls in the target's square.");
+                                confthrow.Description = StrikeRules.CreateBasicStrikeDescription2(confthrow.StrikeModifiers, null, null, null, "The target takes " + (((qf.Owner.Level - 1) / 4) + 2).ToString() + "d6/2 damage.", "You lose panache, whether the attack succeeds or fails. The weapon falls in the target's square.");
                             }
                             else
                             {
-                                confthrow.Description = StrikeRules.CreateBasicStrikeDescription(confthrow.StrikeModifiers, null, null, null, "The target takes 3d6/2 damage.", "You lose panache, whether the attack succeeds or fails. The weapon falls in the target's square.");
+                                confthrow.Description = StrikeRules.CreateBasicStrikeDescription2(confthrow.StrikeModifiers, null, null, null, "The target takes " + (((qf.Owner.Level - 1) / 4) + 2).ToString() + "d6/2 damage.", "You lose panache, whether the attack succeeds or fails. The weapon falls in the target's square.");
                             }
 
                             confthrow.ActionCost = 1;
+                            confthrow.Target = Target.Ranged(item.WeaponProperties.RangeIncrement);
                             confthrow.StrikeModifiers.OnEachTarget = async delegate (Creature owner, Creature victim, CheckResult result)
                             {
                                 if (result == CheckResult.Failure)
                                 {
-                                    if (qf.Owner.Level < 5)
-                                    {
-                                        HalfDiceFormula halfdamage2 = new HalfDiceFormula(DiceFormula.FromText("2d6", "Precise Strike"), "Miss with Confident Finisher");
-                                        await CommonSpellEffects.DealDirectDamage(confthrow, halfdamage2, victim, confthrow.CheckResult, confthrow.StrikeModifiers.CalculatedItem.WeaponProperties.DamageKind);
-                                    }
-                                    else
-                                    {
-                                        HalfDiceFormula halfdamage = new HalfDiceFormula(DiceFormula.FromText("3d6", "Precise Strike"), "Miss with Confident Finisher");
-                                        await CommonSpellEffects.DealDirectDamage(confthrow, halfdamage, victim, confthrow.CheckResult, confthrow.StrikeModifiers.CalculatedItem.WeaponProperties.DamageKind);
-                                    }
+                                    HalfDiceFormula halfdamage = new HalfDiceFormula(DiceFormula.FromText((((qf.Owner.Level - 1) / 4) + 2).ToString() + "d6", "Precise Strike"), "Miss with Confident Finisher");
+                                    DiceFormula fulldamage = DiceFormula.FromText((((qf.Owner.Level - 1) / 4) + 2).ToString() + "d6", "Miss with Precise Finisher");
+                                    await CommonSpellEffects.DealDirectDamage(confthrow, qf.Owner.HasEffect(PreciseFinisherQEffectId) ? fulldamage : halfdamage, victim, result, confthrow.StrikeModifiers.CalculatedItem.WeaponProperties.DamageKind);
                                 }
                                 FinisherExhaustion(confthrow.Owner);
                             };
                             confthrow.Traits.Add(Finisher);
                             return confthrow;
                         }
-
                         return null;
+                    }
+                });
+            }
+
+            if (qf.Owner.HasFeat(AddMulticlassSwash.FinishingPrecision.FeatName))
+            {
+                qf.Owner.AddQEffect(new QEffect
+                {
+                    ProvideStrikeModifier = delegate (Item item)
+                    {
+                        StrikeModifiers basic = new StrikeModifiers();
+                        bool flag = !item.HasTrait(Trait.Ranged) && (item.HasTrait(Trait.Agile) || item.HasTrait(Trait.Finesse));
+                        bool flag2 = qf.Owner.HasEffect(AddSwash.PanacheId);
+                        if (flag && flag2)
+                        {
+                            CombatAction basicFinisher = StrikeRules.CreateStrike(qf.Owner, item, RangeKind.Ranged, -1, thrown: true, basic);
+                            basicFinisher.Name = "Basic Finisher (Thrown)";
+                            basicFinisher.Illustration = new SideBySideIllustration(item.Illustration, IllustrationName.StarHit);
+                            basicFinisher.Description = StrikeRules.CreateBasicStrikeDescription2(basicFinisher.StrikeModifiers, null, null, null, null, "You lose panache, whether the attack succeeds or fails.");
+                            basicFinisher.ActionCost = 1;
+                            basicFinisher.Target = Target.Ranged(item.WeaponProperties.RangeIncrement);
+                            basicFinisher.StrikeModifiers.OnEachTarget = async delegate (Creature owner, Creature victim, CheckResult result)
+                            {
+                                FinisherExhaustion(owner);
+                            };
+                            basicFinisher.Traits.Add(Finisher);
+                            return basicFinisher;
+                        }
+                        else return null;
                     }
                 });
             }
@@ -838,6 +874,7 @@ public class AddSwash
                             combatAction4.Illustration = new SideBySideIllustration(item.Illustration, IllustrationName.Trip);
                             combatAction4.Description = StrikeRules.CreateBasicStrikeDescription2(combatAction4.StrikeModifiers, null, "The target is flat-footed until the end of your next turn.", null, null, "You lose panache, whether the attack succeeds or fails. The weapon falls in the target's square.");
                             combatAction4.ActionCost = 1;
+                            combatAction4.Target = Target.Ranged(item.WeaponProperties.RangeIncrement);
                             combatAction4.Traits.Add(Finisher);
                             return combatAction4;
                         }
@@ -864,6 +901,7 @@ public class AddSwash
                             combatAction3.Illustration = new SideBySideIllustration(item.Illustration, IllustrationName.BloodVendetta);
                             combatAction3.Description = StrikeRules.CreateBasicStrikeDescription2(combatAction3.StrikeModifiers, null, "The target takes 3d6 persistent bleed damage.", null, null, "You lose panache, whether the attack succeeds or fails. The weapon falls in the target's square.");
                             combatAction3.ActionCost = 1;
+                            combatAction3.Target = Target.Ranged(item.WeaponProperties.RangeIncrement);
                             combatAction3.StrikeModifiers.OnEachTarget = async delegate (Creature owner, Creature victim, CheckResult result)
                             {
                                 if (result >= CheckResult.Success)
@@ -897,6 +935,7 @@ public class AddSwash
                             stun2.Illustration = new SideBySideIllustration(item.Illustration, IllustrationName.Stunned);
                             stun2.Description = StrikeRules.CreateBasicStrikeDescription2(stun2.StrikeModifiers, null, "The target makes a DC " + stun2.Owner.ClassOrSpellDC() + " Fortitude save (this is an incapacitation effect). On a success, it can't take reactions for 1 turn. On a failure, it is stunned 1, and on a critical failure, it is stunned 3.", null, null, "You lose panache, whether the attack succeeds or fails. The weapon falls in the target's square.");
                             stun2.ActionCost = 1;
+                            stun2.Target = Target.Ranged(item.WeaponProperties.RangeIncrement);
                             stun2.Traits.Add(Finisher);
                             stun2.StrikeModifiers.OnEachTarget = async delegate (Creature owner, Creature victim, CheckResult result)
                             {
@@ -926,7 +965,6 @@ public class AddSwash
                             };
                             return stun2;
                         }
-
                         return null;
                     }
                 });
@@ -1440,8 +1478,8 @@ public class AddSwash
         {
             qf.StartOfCombat = async (qf) =>
             {
-                QEffect panacheGranter = qf.Owner.QEffects.First((QEffect fct) => fct.Key == "PanacheGranter");
-                var list = (List<ActionId>)qf.Tag;
+                QEffect panacheGranter = qf.Owner.QEffects.FirstOrDefault((QEffect fct) => fct.Key == "PanacheGranter");
+                var list = (List<ActionId>)panacheGranter.Tag;
                 if (qf.Owner.HasFeat(BattledancerStyle))
                 {
                     list.Add(LeadingDanceId);

@@ -1,10 +1,12 @@
 ﻿using Dawnsbury.Audio;
 using Dawnsbury.Core;
 using Dawnsbury.Core.CombatActions;
+using Dawnsbury.Core.Creatures;
 using Dawnsbury.Core.Mechanics;
 using Dawnsbury.Core.Mechanics.Core;
 using Dawnsbury.Core.Mechanics.Enumerations;
 using Dawnsbury.Core.Mechanics.Targeting;
+using Dawnsbury.Core.Mechanics.Targeting.TargetingRequirements;
 using Dawnsbury.Core.Mechanics.Treasure;
 using Dawnsbury.Core.Possibilities;
 using Dawnsbury.Display.Illustrations;
@@ -61,10 +63,59 @@ public class AddWeapons
             .WithWeaponProperties(new WeaponProperties("1d8", DamageKind.Bludgeoning));
     });
 
+    public static ItemName DuelingCape = ModManager.RegisterNewItemIntoTheShop("DuelingCape", (itemName) =>
+    {
+        return new Item(itemName, new ModdedIllustration("PhoenixAssets/DuelingCape.png"), "dueling cape", 0, 0, new Trait[] { })
+        {
+            ProvidesItemAction = delegate (Creature you, Item cape2)
+            {
+                if (!you.QEffects.Any((QEffect qf) => qf.Name == "Raised Cape"))
+                {
+                    return new ActionPossibility(new CombatAction(you, cape2.Illustration, "Brandish Cape", new Trait[] { Trait.Interact }, "Hold the dueling cape defensively, giving yourself a +1 circumstance bonus to AC and Deception checks to Feint until the start of your next turn.",
+                            Target.Self())
+                        .WithActionCost(1)
+                        .WithGoodness((tg, self, _) => self.AI.GainBonusToAC(1))
+                        .WithSoundEffect(SfxName.RaiseShield)
+                        .WithEffectOnSelf(async (me) =>
+                        {
+                            me.AddQEffect(new QEffect("Raised Cape", "You have a +1 circumstance bonus to AC and to Deception checks to Feint.", ExpirationCondition.ExpiresAtStartOfYourTurn, me, cape2.Illustration)
+                            {
+                                StateCheck = async (qf2) =>
+                                {
+                                    if (!qf2.Owner.HeldItems.Contains(cape2))
+                                    {
+                                        qf2.ExpiresAt = ExpirationCondition.Immediately;
+                                    }
+                                },
+                                BonusToDefenses = delegate (QEffect qf, CombatAction action, Defense defense)
+                                {
+                                    if (defense == Defense.AC)
+                                    {
+                                        return new Bonus(1, BonusType.Circumstance, "raised dueling cape");
+                                    }
+                                    else return null;
+                                },
+                                BonusToSkillChecks = delegate (Skill skill, CombatAction action, Creature target)
+                                {
+                                    if (action.ActionId == ActionId.Feint && skill == Skill.Deception)
+                                    {
+                                        return new Bonus(1, BonusType.Circumstance, "raised dueling cape");
+                                    }
+                                    else return null;
+                                },
+                                CountsAsABuff = true
+                            });
+                        }));
+                }
+                else return null;
+            }
+        }.WithDescription("While wielding this cape, you can spend an action to hold it in a defensive position, giving you a +1 circumstance bonus to AC and to Deception checks to Feint until the start of your next turn.");
+    });
+
     
     public static void LoadWeapons()
     {
-        List<ItemName> items = new List<ItemName>() { MainGauche, BoStaff };
+        List<ItemName> items = new List<ItemName>() { MainGauche, BoStaff, DuelingCape };
         ModManager.RegisterActionOnEachCreature((creature) =>
         {
             creature.AddQEffect(new QEffect()
