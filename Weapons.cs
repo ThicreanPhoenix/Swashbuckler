@@ -53,13 +53,13 @@ public class AddWeapons
     
     public static ItemName MainGauche = ModManager.RegisterNewItemIntoTheShop("Main-Gauche", (itemName) =>
     {
-        return new Item(itemName, IllustrationName.Dagger, "main-gauche", 0, 0, new Trait[] { Trait.Agile, Trait.Disarm, Trait.Finesse, Trait.VersatileS, Parry, Trait.Martial, Trait.Knife })
+        return new Item(itemName, new ModdedIllustration("PhoenixAssets/MainGauche.png"), "main-gauche", 0, 0, new Trait[] { Trait.Agile, Trait.Disarm, Trait.Finesse, Trait.VersatileS, Parry, Trait.Martial, Trait.Knife })
             .WithWeaponProperties(new WeaponProperties("1d4", DamageKind.Piercing));
     });
 
     public static ItemName BoStaff = ModManager.RegisterNewItemIntoTheShop("Bo Staff", (itemName) =>
     {
-        return new Item(itemName, IllustrationName.Quarterstaff, "bostaff", 0, 0, new Trait[] { Parry, Trait.Trip, Trait.Martial, Trait.Staff, Trait.TwoHanded, Trait.Reach, Trait.Club, Trait.MonkWeapon, Trait.NonMetallic })
+        return new Item(itemName, new ModdedIllustration("PhoenixAssets/BoStaff.png"), "bostaff", 0, 0, new Trait[] { Parry, Trait.Trip, Trait.Martial, Trait.Staff, Trait.TwoHanded, Trait.Reach, Trait.Club, Trait.MonkWeapon, Trait.NonMetallic })
             .WithWeaponProperties(new WeaponProperties("1d8", DamageKind.Bludgeoning));
     });
 
@@ -126,9 +126,8 @@ public class AddWeapons
                     {
                         if (i.HasTrait(Parry) && (creature.QEffects.FirstOrDefault((QEffect qf) => (qf.Id == ParryEffect) && (qf.Tag == i)) == default))
                         {
-                            creature.AddQEffect(new QEffect()
+                            creature.AddQEffect(new QEffect(ExpirationCondition.Ephemeral)
                             {
-                                ExpiresAt = ExpirationCondition.Ephemeral,
                                 ProvideActionIntoPossibilitySection = delegate (QEffect effect, PossibilitySection section)
                                 {
                                     if (section.PossibilitySectionId == PossibilitySectionId.ItemActions)

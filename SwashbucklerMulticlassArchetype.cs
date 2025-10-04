@@ -51,30 +51,14 @@ public class AddMulticlassSwash
         })
         .WithOnSheet(delegate (CalculatedCharacterSheetValues sheet)
         {
-            //sheet.AddFeatForPurposesOfPrerequisitesOnly(AddSwash.PreciseStrike);
-            sheet.AddFeat(AddSwash.PreciseStrike!, null);
+            sheet.AddFeatForPurposesOfPrerequisitesOnly(AddSwash.PreciseStrike);
+        })
+        .WithOnCreature(delegate (Creature creature)
+        {
+            creature.AddQEffect(AddSwash.PreciseStrikeEffect(1));
         })
         .WithPermanentQEffect(null, delegate (QEffect qf)
         {
-            /*
-            qf.YouDealDamageWithStrike = delegate (QEffect qf, CombatAction action, DiceFormula diceFormula, Creature defender)
-            {
-                bool flag = action.HasTrait(Trait.Agile) || action.HasTrait(Trait.Finesse);
-                bool flag2 = action.Owner.HasEffect(AddSwash.PanacheId);
-                bool flag3 = action.HasTrait(AddSwash.Finisher);
-                bool flag4 = !action.HasTrait(Trait.Ranged) || (action.HasTrait(Trait.Thrown) && (action.Owner.PersistentCharacterSheet?.Calculated.AllFeats.Any(feat => feat.Name == "Flying Blade") ?? false) && (defender.DistanceTo(qf.Owner) <= action.Item!.WeaponProperties!.RangeIncrement));
-                bool flag5 = defender.IsImmuneTo(Trait.PrecisionDamage);
-                if (flag && flag3 && flag4 && (!flag5))
-                {
-                    return diceFormula.Add(DiceFormula.FromText("1d6", "Precise Strike"));
-                }
-                else if (flag && flag2 && flag4 && (!flag5))
-                {
-                    return diceFormula.Add(DiceFormula.FromText("1", "Precise Strike"));
-                }
-                return diceFormula;
-            };
-            */
             qf.ProvideStrikeModifier = delegate (Item item)
             {
                 StrikeModifiers basic = new StrikeModifiers();
