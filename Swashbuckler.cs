@@ -539,7 +539,6 @@ public class AddSwash
         {
             Key = "PanacheGranter",
             Tag = new List<ActionId>(),
-            /*
             StartOfCombat = async (qf) =>
             {
                 SwashbucklerStyle style = (SwashbucklerStyle)qf.Owner.PersistentCharacterSheet.Calculated.AllFeats.Find(feat => feat.HasTrait(SwashStyle));
@@ -550,7 +549,6 @@ public class AddSwash
                     list.Add(id);
                 }
             },
-            */
             AfterYouTakeActionAgainstTarget = async delegate (QEffect qf, CombatAction action, Creature target, CheckResult result)
             {
                 SwashbucklerStyle style = (SwashbucklerStyle)qf.Owner.PersistentCharacterSheet.Calculated.AllFeats.Find(feat => feat.HasTrait(SwashStyle));
@@ -566,16 +564,20 @@ public class AddSwash
                 }
             }
         };
-        preciseStrike.CharacterSheetBecomesCreature = (sheet, creature) =>
+        /*
+    preciseStrike.CharacterSheetBecomesCreature = (sheet, creature) =>
+    {
+        QEffect panacheGranter = qf.Owner.QEffects.FirstOrDefault((QEffect fct) => fct.Key == "PanacheGranter");
+        ar list = (List<ActionId>)panacheGranter.Tag;
+        SwashbucklerStyle style = (SwashbucklerStyle)creature.PersistentCharacterSheet.Calculated.AllFeats.Find(feat => feat.HasTrait(SwashStyle));
+        var list = (List<ActionId>)preciseStrike.Tag;
+        list.Add(ActionId.TumbleThrough);
+        foreach (ActionId id in style.PanacheTriggers)
         {
-            SwashbucklerStyle style = (SwashbucklerStyle)creature.PersistentCharacterSheet.Calculated.AllFeats.Find(feat => feat.HasTrait(SwashStyle));
-            var list = (List<ActionId>)preciseStrike.Tag;
-            list.Add(ActionId.TumbleThrough);
-            foreach (ActionId id in style.PanacheTriggers)
-            {
-                list.Add(id);
-            }
-        };
+            list.Add(id);
+        }
+    };
+        */
         return preciseStrike;
     }
   
@@ -778,6 +780,7 @@ public class AddSwash
     public static Feat DisarmingFlair = new TrueFeat(ModManager.RegisterFeatName("Disarming Flair", "Disarming Flair"), 1, "It's harder for foes to regain their grip when you knock their weapon partially out of their hands.", "When you succeed at an Athletics check to Disarm, the circumstance bonus and penalty from Disarm last until the end of your next turn, instead of until the beginning of the target's next turn. The target can use an Interact action to adjust their grip and remove this effect. If your swashbuckler style is gymnast and you succeed at your Athletics check to Disarm a foe, you gain panache.", new Trait[1] { SwashTrait }, null)
         .WithPermanentQEffect("Your Disarm attempts last longer, and you gain panache when you Disarm.", delegate (QEffect qf)
         {
+            /*
             qf.CharacterSheetBecomesCreature = (sheet, creature) =>
             {
                 QEffect panacheGranter = qf.Owner.QEffects.FirstOrDefault((QEffect fct) => fct.Key == "PanacheGranter");
@@ -787,7 +790,7 @@ public class AddSwash
                     list.Add(ActionId.Disarm);
                 }
             };
-            /*
+            */
             qf.StartOfCombat = async (qf) =>
             {
                 QEffect panacheGranter = qf.Owner.QEffects.FirstOrDefault((QEffect fct) => fct.Key == "PanacheGranter");
@@ -797,7 +800,6 @@ public class AddSwash
                     list.Add(ActionId.Disarm);
                 }
             };
-            */
             qf.AfterYouTakeAction = async delegate (QEffect effect, CombatAction disarm)
             {
                 if (disarm.Name == "Disarm" && disarm.CheckResult == CheckResult.Success)
@@ -1193,15 +1195,26 @@ public class AddSwash
         });
 
     public static Feat StylishEntrance = new TrueFeat(ModManager.RegisterFeatName("StylishEntrance", "Stylish Entrance"), 1, "You bring your flair into the very act of readying yourself for combat.", "You can use the skill associated with your swashbuckler's style for initiative rolls instead of Perception.", new Trait[] { SwashTrait, Trait.Homebrew }, null)
-        .WithPermanentQEffect("[TEXT TO BE ADDED HERE]", delegate (QEffect qf)
+        .WithPermanentQEffect("You roll your swashbuckler style's skill for initiative.", delegate (QEffect qf)
         {
             SwashbucklerStyle style = (SwashbucklerStyle)qf.Owner.PersistentCharacterSheet.Calculated.AllFeats.Find(feat => feat.HasTrait(SwashStyle));
+            if (style != null)
+            {
+                Skill skill = style.Skill;
+                qf.Description = "You roll " + skill.HumanizeTitleCase2() + " for initiative.";
+                qf.OfferAlternateSkillForInitiative = delegate (QEffect fct)
+                {
+                    return skill;
+                };
+            }
+            /*
             Skill skill = style.Skill;
             qf.Description = "You roll " + skill.HumanizeTitleCase2() + " for initiative.";
             qf.OfferAlternateSkillForInitiative = delegate (QEffect fct)
             {
                 return skill;
             };
+            */
         });
 
     public static Feat AfterYou = new TrueFeat(ModManager.RegisterFeatName("After You"), 2, "You allow your foes to make the first move in a show of incredible confidence.", "When a battle begins, instead of rolling initiative, you may voluntarily go last. When you do so, you gain panache.", new Trait[1] { SwashTrait }, null)
@@ -1526,6 +1539,7 @@ public class AddSwash
         .WithPrerequisite(values => values.GetProficiency(Trait.Performance) >= Proficiency.Trained, "You must be trained in Performance.")
         .WithPermanentQEffect(null, delegate (QEffect qf)
         {
+            /*
             qf.CharacterSheetBecomesCreature = (sheet, creature) =>
             {
                 QEffect panacheGranter = qf.Owner.QEffects.FirstOrDefault((QEffect fct) => fct.Key == "PanacheGranter");
@@ -1535,7 +1549,7 @@ public class AddSwash
                     list.Add(LeadingDanceId);
                 }
             };
-            /*
+            */
             qf.StartOfCombat = async (qf) =>
             {
                 QEffect panacheGranter = qf.Owner.QEffects.FirstOrDefault((QEffect fct) => fct.Key == "PanacheGranter");
@@ -1545,7 +1559,6 @@ public class AddSwash
                     list.Add(LeadingDanceId);
                 }
             };
-            */
             qf.ProvideActionIntoPossibilitySection = delegate (QEffect effect, PossibilitySection section)
             {
                 if (section.PossibilitySectionId == PossibilitySectionId.SkillActions)
