@@ -888,7 +888,7 @@ public class AddSwash
                     {
                         StrikeModifiers basic = new StrikeModifiers();
                         bool flag = !item.HasTrait(Trait.Ranged) && (item.HasTrait(Trait.Agile) || item.HasTrait(Trait.Finesse));
-                        bool flag2 = qf.Owner.HasEffect(AddSwash.PanacheId);
+                        bool flag2 = qf.Owner.HasEffect(PanacheId);
                         if (flag && flag2)
                         {
                             CombatAction basicFinisher = StrikeRules.CreateStrike(qf.Owner, item, RangeKind.Ranged, -1, thrown: true, basic);
@@ -1182,9 +1182,10 @@ public class AddSwash
                                     }
                                     aided.Owner.RemoveAllQEffects((QEffect thing) => thing.Name == "Aided by " + qf.Owner.Name);
                                 });
+                            aid.ChosenTargets = ChosenTargets.CreateSingleTarget(aided.Owner);
                             if (await qf.Owner.Battle.AskToUseReaction(qf.Owner, "Would you like to roll a Diplomacy check to Aid your ally's check?"))
                             {
-                                await qf.Owner.Battle.GameLoop.FullCast(aid);
+                                await aid.AllExecute();// qf.Owner.Battle.GameLoop.FullCast(aid);
                             }
                         };
                         target.AddQEffect(aided);
@@ -1207,14 +1208,6 @@ public class AddSwash
                     return skill;
                 };
             }
-            /*
-            Skill skill = style.Skill;
-            qf.Description = "You roll " + skill.HumanizeTitleCase2() + " for initiative.";
-            qf.OfferAlternateSkillForInitiative = delegate (QEffect fct)
-            {
-                return skill;
-            };
-            */
         });
 
     public static Feat AfterYou = new TrueFeat(ModManager.RegisterFeatName("After You"), 2, "You allow your foes to make the first move in a show of incredible confidence.", "When a battle begins, instead of rolling initiative, you may voluntarily go last. When you do so, you gain panache.", new Trait[1] { SwashTrait }, null)
@@ -1321,7 +1314,7 @@ public class AddSwash
             };
         });
 
-    public static Feat FinishingFollowThrough = new TrueFeat(ModManager.RegisterFeatName("Finishing Follow-Through", "Finishing Follow-Through"), 2, "Finishing a foe maintains your swagger.", "You gain Panache if your finisher reduces an enemy to 0 HP.", new Trait[1] { SwashTrait }, null)
+    public static Feat FinishingFollowThrough = new TrueFeat(ModManager.RegisterFeatName("Finishing Follow-Through", "Finishing Follow-Through"), 2, "Finishing a foe maintains your swagger.", "You gain panache if your finisher reduces an enemy to 0 HP.", new Trait[1] { SwashTrait }, null)
         .WithPermanentQEffect("You gain panache when your finisher defeats an enemy.", delegate (QEffect qf)
         {
             qf.AfterYouDealDamage = async delegate (Creature you, CombatAction action, Creature target)
