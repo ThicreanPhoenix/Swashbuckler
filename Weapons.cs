@@ -18,18 +18,16 @@ namespace Dawnsbury.Mods.Phoenix;
 
 public class AddWeapons
 {
-    //TODO: Parry is offered twice for the bostaff.
-    //TODO: Apparently there are issues with ParryEffect between this mod and the Remaster Swash?
-    public static QEffectId ParryEffect = ModManager.RegisterEnumMember<QEffectId>("ParryEffect");
-    public static Trait Parry = ModManager.RegisterTrait("Parry", new TraitProperties("Parry", true, "This weapon can be used defensively to block attacks."));
+    public static QEffectId ParryEffect = ModManager.TryParse<QEffectId>("Parry", out QEffectId parryId) ? parryId : ModManager.RegisterEnumMember<QEffectId>("Parry");
+    public static Trait Parry = ModManager.TryParse<Trait>("Parry", out Trait parryTrait) ? parryTrait : ModManager.RegisterTrait("Parry", new TraitProperties("Parry", true, "If you are at least trained in this weapon, it can be used defensively to block attacks."));
 
-    public static QEffect Parrying(Item item)
+    public static QEffect Parrying(Item weapon)
     {
         return new QEffect()
         {
-            Name = "Parrying with " + item.Name,
+            Name = "Parrying",
             Id = ParryEffect,
-            Illustration = IllustrationName.Swords,
+            Illustration = IllustrationName.Shield,
             Description = "You have a +1 circumstance bonus to AC.",
             ExpiresAt = ExpirationCondition.ExpiresAtStartOfYourTurn,
             BonusToDefenses = delegate (QEffect parrying, CombatAction? bonk, Defense defense)
@@ -40,14 +38,14 @@ public class AddWeapons
                 }
                 else return null;
             },
-            Tag = item,
             StateCheck = (qf) =>
             {
-                if (!qf.Owner.HeldItems.Contains(item))
+                if (!qf.Owner.HeldItems.Any((Item i) => i.HasTrait(Parry)))
                 {
                     qf.ExpiresAt = ExpirationCondition.Immediately;
                 }
-            }
+            },
+            Tag = weapon
         };
     }
     
@@ -120,11 +118,12 @@ public class AddWeapons
         {
             creature.AddQEffect(new QEffect()
             {
+                Key = "ParryGranter",
                 StateCheck = (qf) =>
                 {
                     foreach (Item i in creature.HeldItems)
                     {
-                        if (i.HasTrait(Parry) && (creature.QEffects.FirstOrDefault((QEffect qf) => (qf.Id == ParryEffect) && (qf.Tag == i)) == default))
+                        if (i.HasTrait(Parry) && ((Proficiency)creature.GetProficiency(i) >= Proficiency.Trained) && !creature.HasEffect(ParryEffect))
                         {
                             creature.AddQEffect(new QEffect(ExpirationCondition.Ephemeral)
                             {
@@ -132,14 +131,19 @@ public class AddWeapons
                                 {
                                     if (section.PossibilitySectionId == PossibilitySectionId.ItemActions)
                                     {
-                                        ActionPossibility parry = new ActionPossibility(new CombatAction(effect.Owner, new SideBySideIllustration(IllustrationName.Shield, i.Illustration), "Parry", new Trait[0] { }, "You raise your weapon to parry oncoming attacks, granting yourself a +1 circumstance bonus to AC.", Target.Self())
+                                        bool parryIdExists = ModManager.TryParse<ActionId>("Parry", out ActionId parryId);
+                                        ActionPossibility parry = new ActionPossibility(new CombatAction(effect.Owner, new SideBySideIllustration(IllustrationName.Shield, i.Illustration), "Parry", new Trait[] { }, "You raise your weapon to parry oncoming attacks, granting yourself a +1 circumstance bonus to AC until the start of your next turn.", Target.Self())
                                             .WithSoundEffect(SfxName.RaiseShield)
                                             .WithActionCost(1)
-                                            .WithEffectOnEachTarget(async (caster, spell, target, result) =>
+                                            .WithActionId(parryId)
+                                            .WithItem(i)
+                                            .WithGoodness((tg, you, _) => you.AI.GainBonusToAC(1))
+                                            .WithEffectOnEachTarget(async (spell, caster, target, result) =>
                                             {
-                                                target.AddQEffect(Parrying(i));
+                                                target.AddQEffect(Parrying(i)
+                                                    .WithSourceAction(spell));
                                             }));
-                                        return parry;
+                                        return parry.WithPossibilityGroup(Constants.POSSIBILITY_GROUP_ITEM_IN_HAND);
                                     }
                                     else return null;
                                 }
