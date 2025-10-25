@@ -1,0 +1,53 @@
+Index: obj/Debug/net9.0/Dawnbury.Mods.Phoenix.GeneratedMSBuildEditorConfig.editorconfig
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.GeneratedMSBuildEditorConfig.editorconfig b/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.GeneratedMSBuildEditorConfig.editorconfig
+deleted file mode 100644
+--- a/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.GeneratedMSBuildEditorConfig.editorconfig	(revision 030e0450730f454afed40e68b6d58fa9279fa990)
++++ /dev/null	(revision 030e0450730f454afed40e68b6d58fa9279fa990)
+@@ -1,15 +0,0 @@
+-is_global = true
+-build_property.TargetFramework = net9.0
+-build_property.TargetPlatformMinVersion = 
+-build_property.UsingMicrosoftNETSdkWeb = 
+-build_property.ProjectTypeGuids = 
+-build_property.InvariantGlobalization = 
+-build_property.PlatformNeutralAssembly = 
+-build_property.EnforceExtendedAnalyzerRules = 
+-build_property._SupportedPlatformList = Linux,macOS,Windows
+-build_property.RootNamespace = Dawnbury.Mods.Phoenix
+-build_property.ProjectDir = C:\Users\sethr\source\repos\ThicreanPhoenix\Swashbuckler\Swashbuckler\Swashbuckler\
+-build_property.EnableComHosting = 
+-build_property.EnableGeneratedComInterfaceComImportInterop = 
+-build_property.EffectiveAnalysisLevelStyle = 9.0
+-build_property.EnableCodeStyleSeverity = 
+Index: Dawnbury.Mods.Phoenix.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><Project Sdk=\"Microsoft.NET.Sdk\">\r\n  <PropertyGroup>\r\n    <TargetFramework>net9.0</TargetFramework>\r\n    <OutputType>Library</OutputType>\r\n    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>\r\n    <SupportedOSPlatformVersion>8.0</SupportedOSPlatformVersion>\r\n    <PlatformTarget>x64</PlatformTarget>\r\n  </PropertyGroup>\r\n  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)' == 'Debug|x64'\">\r\n    <OutputPath>bin\\x64\\Debug\\</OutputPath>\r\n  </PropertyGroup>\r\n  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)' == 'Release|x64'\">\r\n    <OutputPath>bin\\x64\\Release\\</OutputPath>\r\n  </PropertyGroup>\r\n  <ItemGroup>\r\n    <PackageReference Include=\"Microsoft.CSharp\" Version=\"4.7.0\" />\r\n  </ItemGroup>\r\n  <ItemGroup>\r\n    <Reference Include=\"Common\">\r\n      <HintPath>F:\\SteamLibrary\\steamapps\\common\\Dawnsbury Days\\Data\\Common.dll</HintPath>\r\n    </Reference>\r\n    <Reference Include=\"Dawnsbury Days\">\r\n      <HintPath>F:\\SteamLibrary\\steamapps\\common\\Dawnsbury Days\\Data\\Dawnsbury Days.dll</HintPath>\r\n    </Reference>\r\n    <Reference Include=\"MonoGame.Framework\">\r\n      <HintPath>F:\\SteamLibrary\\steamapps\\common\\Dawnsbury Days\\Data\\MonoGame.Framework.dll</HintPath>\r\n    </Reference>\r\n  </ItemGroup>\r\n</Project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dawnbury.Mods.Phoenix.csproj b/Dawnbury.Mods.Phoenix.csproj
+--- a/Dawnbury.Mods.Phoenix.csproj	(revision 030e0450730f454afed40e68b6d58fa9279fa990)
++++ b/Dawnbury.Mods.Phoenix.csproj	(date 1761416355330)
+@@ -17,13 +17,13 @@
+   </ItemGroup>
+   <ItemGroup>
+     <Reference Include="Common">
+-      <HintPath>F:\SteamLibrary\steamapps\common\Dawnsbury Days\Data\Common.dll</HintPath>
++      <HintPath>..\..\.local\share\Steam\steamapps\common\Dawnsbury Days\Data\Common.dll</HintPath>
+     </Reference>
+     <Reference Include="Dawnsbury Days">
+-      <HintPath>F:\SteamLibrary\steamapps\common\Dawnsbury Days\Data\Dawnsbury Days.dll</HintPath>
++      <HintPath>..\..\.local\share\Steam\steamapps\common\Dawnsbury Days\Data\Dawnsbury Days.dll</HintPath>
+     </Reference>
+     <Reference Include="MonoGame.Framework">
+-      <HintPath>F:\SteamLibrary\steamapps\common\Dawnsbury Days\Data\MonoGame.Framework.dll</HintPath>
++      <HintPath>..\..\.local\share\Steam\steamapps\common\Dawnsbury Days\Data\MonoGame.Framework.dll</HintPath>
+     </Reference>
+   </ItemGroup>
+ </Project>
+\ No newline at end of file
