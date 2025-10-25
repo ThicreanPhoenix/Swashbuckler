@@ -1,0 +1,602 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "Dawnbury.Mods.Phoenix/1.0.0": {
+        "dependencies": {
+          "Microsoft.CSharp": "4.7.0",
+          "Common": "1.0.0.0",
+          "Dawnsbury Days": "3.66.0.0",
+          "MonoGame.Framework": "3.8.1.303"
+        },
+        "runtime": {
+          "Dawnbury.Mods.Phoenix.dll": {}
+        }
+      },
+      "Microsoft.CSharp/4.7.0": {},
+      "Common/1.0.0.0": {
+        "runtime": {
+          "Common.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Dawnsbury Days/3.66.0.0": {
+        "runtime": {
+          "Dawnsbury Days.dll": {
+            "assemblyVersion": "3.66.0.0",
+            "fileVersion": "3.66.0.0"
+          }
+        }
+      },
+      "MonoGame.Framework/3.8.1.303": {
+        "runtime": {
+          "MonoGame.Framework.dll": {
+            "assemblyVersion": "3.8.1.303",
+            "fileVersion": "3.8.1.303"
+          }
+        }
+      },
+      "MonoGame.Extended/1.0.0.0": {
+        "runtime": {
+          "MonoGame.Extended.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "System.Windows.Forms/9.0.0.0": {
+        "runtime": {
+          "System.Windows.Forms.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47506"
+          }
+        },
+        "resources": {
+          "cs/System.Windows.Forms.resources.dll": {
+            "locale": "cs"
+          },
+          "fr/System.Windows.Forms.resources.dll": {
+            "locale": "fr"
+          },
+          "zh-Hans/System.Windows.Forms.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "it/System.Windows.Forms.resources.dll": {
+            "locale": "it"
+          },
+          "de/System.Windows.Forms.resources.dll": {
+            "locale": "de"
+          },
+          "tr/System.Windows.Forms.resources.dll": {
+            "locale": "tr"
+          },
+          "ru/System.Windows.Forms.resources.dll": {
+            "locale": "ru"
+          },
+          "pl/System.Windows.Forms.resources.dll": {
+            "locale": "pl"
+          },
+          "ko/System.Windows.Forms.resources.dll": {
+            "locale": "ko"
+          },
+          "es/System.Windows.Forms.resources.dll": {
+            "locale": "es"
+          },
+          "zh-Hant/System.Windows.Forms.resources.dll": {
+            "locale": "zh-Hant"
+          },
+          "ja/System.Windows.Forms.resources.dll": {
+            "locale": "ja"
+          },
+          "pt-BR/System.Windows.Forms.resources.dll": {
+            "locale": "pt-BR"
+          }
+        }
+      },
+      "Steamworks.NET/20.1.0.0": {
+        "runtime": {
+          "Steamworks.NET.dll": {
+            "assemblyVersion": "20.1.0.0",
+            "fileVersion": "20.1.0.0"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.0.0": {
+        "runtime": {
+          "Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.3.27908"
+          }
+        }
+      },
+      "Humanizer/2.14.0.0": {
+        "runtime": {
+          "Humanizer.dll": {
+            "assemblyVersion": "2.14.0.0",
+            "fileVersion": "2.14.1.48190"
+          }
+        }
+      },
+      "TiledLib/4.0.3.0": {
+        "runtime": {
+          "TiledLib.dll": {
+            "assemblyVersion": "4.0.3.0",
+            "fileVersion": "4.0.3.0"
+          }
+        }
+      },
+      "PriorityQueue/5.0.0.0": {
+        "runtime": {
+          "PriorityQueue.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.0.0"
+          }
+        }
+      },
+      "System.Windows.Forms.Design/9.0.0.0": {
+        "runtime": {
+          "System.Windows.Forms.Design.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47506"
+          }
+        },
+        "resources": {
+          "cs/System.Windows.Forms.Design.resources.dll": {
+            "locale": "cs"
+          },
+          "fr/System.Windows.Forms.Design.resources.dll": {
+            "locale": "fr"
+          },
+          "zh-Hans/System.Windows.Forms.Design.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "it/System.Windows.Forms.Design.resources.dll": {
+            "locale": "it"
+          },
+          "de/System.Windows.Forms.Design.resources.dll": {
+            "locale": "de"
+          },
+          "tr/System.Windows.Forms.Design.resources.dll": {
+            "locale": "tr"
+          },
+          "ru/System.Windows.Forms.Design.resources.dll": {
+            "locale": "ru"
+          },
+          "pl/System.Windows.Forms.Design.resources.dll": {
+            "locale": "pl"
+          },
+          "ko/System.Windows.Forms.Design.resources.dll": {
+            "locale": "ko"
+          },
+          "es/System.Windows.Forms.Design.resources.dll": {
+            "locale": "es"
+          },
+          "zh-Hant/System.Windows.Forms.Design.resources.dll": {
+            "locale": "zh-Hant"
+          },
+          "ja/System.Windows.Forms.Design.resources.dll": {
+            "locale": "ja"
+          },
+          "pt-BR/System.Windows.Forms.Design.resources.dll": {
+            "locale": "pt-BR"
+          }
+        }
+      },
+      "FmodForFoxes/3.1.0.0": {
+        "runtime": {
+          "FmodForFoxes.dll": {
+            "assemblyVersion": "3.1.0.0",
+            "fileVersion": "3.1.0.0"
+          }
+        }
+      },
+      "MedallionTopologicalSort/1.0.0.0": {
+        "runtime": {
+          "MedallionTopologicalSort.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "MoreLinq/4.1.0.0": {
+        "runtime": {
+          "MoreLinq.dll": {
+            "assemblyVersion": "4.1.0.0",
+            "fileVersion": "4.1.0.0"
+          }
+        }
+      },
+      "System.Drawing.Common/9.0.0.0": {
+        "runtime": {
+          "System.Drawing.Common.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47506"
+          }
+        }
+      },
+      "FmodForFoxes.Desktop/3.1.0.0": {
+        "runtime": {
+          "FmodForFoxes.Desktop.dll": {
+            "assemblyVersion": "3.1.0.0",
+            "fileVersion": "3.1.0.0"
+          }
+        }
+      },
+      "SharpDX.DXGI/4.0.1.0": {
+        "runtime": {
+          "SharpDX.DXGI.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
+          }
+        }
+      },
+      "SharpDX/4.0.1.0": {
+        "runtime": {
+          "SharpDX.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
+          }
+        }
+      },
+      "SharpDX.Direct3D11/4.0.1.0": {
+        "runtime": {
+          "SharpDX.Direct3D11.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
+          }
+        }
+      },
+      "System.Windows.Forms.Primitives/9.0.0.0": {
+        "runtime": {
+          "System.Windows.Forms.Primitives.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47506"
+          }
+        },
+        "resources": {
+          "cs/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "cs"
+          },
+          "fr/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "fr"
+          },
+          "zh-Hans/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "it/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "it"
+          },
+          "de/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "de"
+          },
+          "tr/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "tr"
+          },
+          "ru/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "ru"
+          },
+          "pl/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "pl"
+          },
+          "ko/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "ko"
+          },
+          "es/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "es"
+          },
+          "zh-Hant/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "zh-Hant"
+          },
+          "ja/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "ja"
+          },
+          "pt-BR/System.Windows.Forms.Primitives.resources.dll": {
+            "locale": "pt-BR"
+          }
+        }
+      },
+      "SharpDX.MediaFoundation/4.0.1.0": {
+        "runtime": {
+          "SharpDX.MediaFoundation.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
+          }
+        }
+      },
+      "SharpDX.XInput/4.0.1.0": {
+        "runtime": {
+          "SharpDX.XInput.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
+          }
+        }
+      },
+      "SharpDX.XAudio2/4.0.1.0": {
+        "runtime": {
+          "SharpDX.XAudio2.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
+          }
+        }
+      },
+      "System.Private.Windows.Core/9.0.0.0": {
+        "runtime": {
+          "System.Private.Windows.Core.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47506"
+          }
+        }
+      },
+      "Accessibility/4.0.0.0": {
+        "runtime": {
+          "Accessibility.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.0"
+          }
+        }
+      },
+      "Microsoft.Win32.SystemEvents/9.0.0.0": {
+        "runtime": {
+          "Microsoft.Win32.SystemEvents.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47515"
+          }
+        }
+      },
+      "System.Configuration.ConfigurationManager/9.0.0.0": {
+        "runtime": {
+          "System.Configuration.ConfigurationManager.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47515"
+          }
+        }
+      },
+      "System.Formats.Nrbf/9.0.0.0": {
+        "runtime": {
+          "System.Formats.Nrbf.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47515"
+          }
+        }
+      },
+      "System.Windows.Extensions/9.0.0.0": {
+        "runtime": {
+          "System.Windows.Extensions.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47515"
+          }
+        }
+      },
+      "System.CodeDom/9.0.0.0": {
+        "runtime": {
+          "System.CodeDom.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47515"
+          }
+        }
+      },
+      "SharpDX.Direct3D9/4.0.1.0": {
+        "runtime": {
+          "SharpDX.Direct3D9.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
+          }
+        }
+      },
+      "SharpDX.Mathematics/4.0.1.0": {
+        "runtime": {
+          "SharpDX.Mathematics.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.0.1.0"
+          }
+        }
+      },
+      "System.Diagnostics.EventLog/9.0.0.0": {
+        "runtime": {
+          "System.Diagnostics.EventLog.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47515"
+          }
+        }
+      },
+      "System.Security.Cryptography.ProtectedData/9.0.0.0": {
+        "runtime": {
+          "System.Security.Cryptography.ProtectedData.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47515"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Dawnbury.Mods.Phoenix/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.CSharp/4.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
+      "path": "microsoft.csharp/4.7.0",
+      "hashPath": "microsoft.csharp.4.7.0.nupkg.sha512"
+    },
+    "Common/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Dawnsbury Days/3.66.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MonoGame.Framework/3.8.1.303": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MonoGame.Extended/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Windows.Forms/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Steamworks.NET/20.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Newtonsoft.Json/13.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Humanizer/2.14.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TiledLib/4.0.3.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "PriorityQueue/5.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Windows.Forms.Design/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FmodForFoxes/3.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MedallionTopologicalSort/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MoreLinq/4.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Drawing.Common/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FmodForFoxes.Desktop/3.1.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SharpDX.DXGI/4.0.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SharpDX/4.0.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SharpDX.Direct3D11/4.0.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Windows.Forms.Primitives/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SharpDX.MediaFoundation/4.0.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SharpDX.XInput/4.0.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SharpDX.XAudio2/4.0.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Private.Windows.Core/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Accessibility/4.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Win32.SystemEvents/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Configuration.ConfigurationManager/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Formats.Nrbf/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Windows.Extensions/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.CodeDom/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SharpDX.Direct3D9/4.0.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "SharpDX.Mathematics/4.0.1.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Diagnostics.EventLog/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Security.Cryptography.ProtectedData/9.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

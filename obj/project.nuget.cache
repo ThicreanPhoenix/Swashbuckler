@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "pUK7EzXFl10=",
+  "success": true,
+  "projectFilePath": "/home/phoenix/RiderProjects/Swashbuckler/Dawnbury.Mods.Phoenix.csproj",
+  "expectedPackageFiles": [
+    "/home/phoenix/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}
