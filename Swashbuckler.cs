@@ -1697,6 +1697,20 @@ public class AddSwash
         .WithPrerequisite(sheet => sheet.HasFeat(FeatName.ExpertAthletics), "You must be an expert in Athletics.")
         .WithPermanentQEffect(null, delegate (QEffect qf)
         {
+            qf.AdjustStrikeAction = delegate(QEffect qf, CombatAction action)
+            {
+                if (action.ActionId == ActionId.Grapple || action.ActionId == ActionId.Shove || action.ActionId == ActionId.Trip)
+                {
+                    if (action.HasTrait(Trait.Agile))
+                    {
+                        action.Traits.Add(Trait.GreaterAgile);
+                    }
+                    else
+                    {
+                        action.Traits.Add(Trait.Agile);
+                    }
+                }
+            };
             qf.BonusToAttackRolls = delegate (QEffect effect, CombatAction action, Creature target)
             {
                 if (action == null)
@@ -1725,29 +1739,19 @@ public class AddSwash
 
         public static Feat CombinationFinisher = new TrueFeat(ModManager.RegisterFeatName("CombinationFinisher", "Combination Finisher"), 6, "You combine a series of attacks with a powerful blow.", "Your finishers' Strikes have a lower multiple attack penalty: -4 (or -3 with an agile weapon) instead of -5 if they're the second attack on your turn, or -8 (or -6 with an agile weapon) instead of -10 if they're the third or subsequent attack on your turn.", new Trait[1] { SwashTrait }).WithPermanentQEffect(null, delegate (QEffect qf)
         {
-            qf.BonusToAttackRolls = delegate (QEffect effect, CombatAction action, Creature target)
+            qf.AdjustStrikeAction = delegate(QEffect qf, CombatAction action)
             {
-                if (action == null)
-                {
-                    return null;
-                }
-
                 if (action.HasTrait(Finisher))
                 {
-                    if (effect.Owner.Actions.AttackedThisManyTimesThisTurn == 1)
+                    if (action.HasTrait(Trait.Agile))
                     {
-                        return new Bonus(1, BonusType.Untyped, "MAP reduction (Agile Maneuvers)");
+                        action.Traits.Add(Trait.GreaterAgile);
                     }
-
-                    if (effect.Owner.Actions.AttackedThisManyTimesThisTurn >= 2)
+                    else
                     {
-                        return new Bonus(2, BonusType.Untyped, "MAP reduction (Agile Maneuvers)");
+                        action.Traits.Add(Trait.Agile);
                     }
-
-                    return null;
                 }
-
-                return null;
             };
         });
 
@@ -2041,6 +2045,7 @@ public class AddSwash
         ModManager.AddFeat(LeadingDance);
         ModManager.AddFeat(SwaggeringInitiative);
         ModManager.AddFeat(TwinParry);
+        //ModManager.AddFeat(CombinationFinisher);
         ReplaceOpportunityAttack();
         ModManager.AddFeat(PreciseFinisher);
         ModManager.AddFeat(BleedingFinisher);

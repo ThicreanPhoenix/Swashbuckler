@@ -138,9 +138,9 @@ public class AddWeapons
                                             .WithActionId(parryId)
                                             .WithItem(i)
                                             .WithGoodness((tg, you, _) => you.AI.GainBonusToAC(1))
-                                            .WithEffectOnEachTarget(async (spell, caster, target, result) =>
+                                            .WithEffectOnSelf(async (spell, self) =>
                                             {
-                                                target.AddQEffect(Parrying(i)
+                                                self.AddQEffect(Parrying(i)
                                                     .WithSourceAction(spell));
                                             }));
                                         return parry.WithPossibilityGroup(Constants.POSSIBILITY_GROUP_ITEM_IN_HAND);
