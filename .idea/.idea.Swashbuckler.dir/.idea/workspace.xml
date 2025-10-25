@@ -4,8 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ec80547-bb55-447e-bda9-4afd723f79d5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Swashbuckler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Swashbuckler.cs" afterDir="false" />
+    <list default="true" id="6ec80547-bb55-447e-bda9-4afd723f79d5" name="Changes" comment="Still">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net9.0/.NETCoreApp,Version=v9.0.AssemblyAttributes.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.assets.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.csproj.FileListAbsolute.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/project.nuget.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/project.packagespec.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/rider.project.restore.info" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +41,7 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///home/phoenix/RiderProjects/Swashbuckler/Swashbuckler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file:///usr/lib/dotnet/sdk/9.0.111/Sdks/Microsoft.NET.Sdk/targets/Microsoft.PackageDependencyResolution.targets" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectColorInfo">{
@@ -71,7 +79,7 @@
       <workItem from="1761416113917" duration="357000" />
       <workItem from="1761416575915" duration="373000" />
       <workItem from="1761416979896" duration="178000" />
-      <workItem from="1761417232678" duration="339000" />
+      <workItem from="1761417232678" duration="669000" />
     </task>
     <task id="LOCAL-00001" summary="wip">
       <option name="closed" value="true" />
@@ -81,7 +89,23 @@
       <option name="project" value="LOCAL" />
       <updated>1761417446072</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="still working on it">
+      <option name="closed" value="true" />
+      <created>1761417647733</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1761417647733</updated>
+    </task>
+    <task id="LOCAL-00003" summary="added obj/ and .idea/ to .gitignore">
+      <option name="closed" value="true" />
+      <created>1761417782057</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1761417782057</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -92,7 +116,9 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="wip" />
-    <option name="LAST_COMMIT_MESSAGE" value="wip" />
+    <MESSAGE value="still working on it" />
+    <MESSAGE value="added obj/ and .idea/ to .gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="added obj/ and .idea/ to .gitignore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
