@@ -1,0 +1,115 @@
+Index: obj/Dawnbury.Mods.Phoenix.csproj.nuget.g.props
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n<Project ToolsVersion=\"14.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\n  <PropertyGroup Condition=\" '$(ExcludeRestorePackageImports)' != 'true' \">\n    <RestoreSuccess Condition=\" '$(RestoreSuccess)' == '' \">True</RestoreSuccess>\n    <RestoreTool Condition=\" '$(RestoreTool)' == '' \">NuGet</RestoreTool>\n    <ProjectAssetsFile Condition=\" '$(ProjectAssetsFile)' == '' \">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>\n    <NuGetPackageRoot Condition=\" '$(NuGetPackageRoot)' == '' \">$(UserProfile)\\.nuget\\packages\\</NuGetPackageRoot>\n    <NuGetPackageFolders Condition=\" '$(NuGetPackageFolders)' == '' \">C:\\Users\\sethr\\.nuget\\packages\\;C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages</NuGetPackageFolders>\n    <NuGetProjectStyle Condition=\" '$(NuGetProjectStyle)' == '' \">PackageReference</NuGetProjectStyle>\n    <NuGetToolVersion Condition=\" '$(NuGetToolVersion)' == '' \">6.14.0</NuGetToolVersion>\n  </PropertyGroup>\n  <ItemGroup Condition=\" '$(ExcludeRestorePackageImports)' != 'true' \">\n    <SourceRoot Include=\"C:\\Users\\sethr\\.nuget\\packages\\\" />\n    <SourceRoot Include=\"C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages\\\" />\n  </ItemGroup>\n</Project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/obj/Dawnbury.Mods.Phoenix.csproj.nuget.g.props b/obj/Dawnbury.Mods.Phoenix.csproj.nuget.g.props
+--- a/obj/Dawnbury.Mods.Phoenix.csproj.nuget.g.props	(revision 030e0450730f454afed40e68b6d58fa9279fa990)
++++ b/obj/Dawnbury.Mods.Phoenix.csproj.nuget.g.props	(date 1761360573070)
+@@ -4,13 +4,12 @@
+     <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
+     <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
+     <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
+-    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
+-    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\sethr\.nuget\packages\;C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages</NuGetPackageFolders>
++    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">/home/phoenix/.nuget/packages/</NuGetPackageRoot>
++    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">/home/phoenix/.nuget/packages/</NuGetPackageFolders>
+     <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
+     <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">6.14.0</NuGetToolVersion>
+   </PropertyGroup>
+   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+-    <SourceRoot Include="C:\Users\sethr\.nuget\packages\" />
+-    <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
++    <SourceRoot Include="/home/phoenix/.nuget/packages/" />
+   </ItemGroup>
+ </Project>
+\ No newline at end of file
+Index: obj/Debug/net9.0/Dawnbury.Mods.Phoenix.GeneratedMSBuildEditorConfig.editorconfig
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>is_global = true\nbuild_property.TargetFramework = net9.0\nbuild_property.TargetPlatformMinVersion = \nbuild_property.UsingMicrosoftNETSdkWeb = \nbuild_property.ProjectTypeGuids = \nbuild_property.InvariantGlobalization = \nbuild_property.PlatformNeutralAssembly = \nbuild_property.EnforceExtendedAnalyzerRules = \nbuild_property._SupportedPlatformList = Linux,macOS,Windows\nbuild_property.RootNamespace = Dawnbury.Mods.Phoenix\nbuild_property.ProjectDir = C:\\Users\\sethr\\source\\repos\\ThicreanPhoenix\\Swashbuckler\\Swashbuckler\\Swashbuckler\\\nbuild_property.EnableComHosting = \nbuild_property.EnableGeneratedComInterfaceComImportInterop = \nbuild_property.EffectiveAnalysisLevelStyle = 9.0\nbuild_property.EnableCodeStyleSeverity = \n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.GeneratedMSBuildEditorConfig.editorconfig b/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.GeneratedMSBuildEditorConfig.editorconfig
+--- a/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.GeneratedMSBuildEditorConfig.editorconfig	(revision 030e0450730f454afed40e68b6d58fa9279fa990)
++++ b/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.GeneratedMSBuildEditorConfig.editorconfig	(date 1761360573086)
+@@ -8,7 +8,7 @@
+ build_property.EnforceExtendedAnalyzerRules = 
+ build_property._SupportedPlatformList = Linux,macOS,Windows
+ build_property.RootNamespace = Dawnbury.Mods.Phoenix
+-build_property.ProjectDir = C:\Users\sethr\source\repos\ThicreanPhoenix\Swashbuckler\Swashbuckler\Swashbuckler\
++build_property.ProjectDir = /home/phoenix/RiderProjects/Swashbuckler/
+ build_property.EnableComHosting = 
+ build_property.EnableGeneratedComInterfaceComImportInterop = 
+ build_property.EffectiveAnalysisLevelStyle = 9.0
+Index: obj/Dawnbury.Mods.Phoenix.csproj.nuget.dgspec.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\n  \"format\": 1,\n  \"restore\": {\n    \"C:\\\\Users\\\\sethr\\\\source\\\\repos\\\\ThicreanPhoenix\\\\Swashbuckler\\\\Swashbuckler\\\\Swashbuckler\\\\Dawnbury.Mods.Phoenix.csproj\": {}\n  },\n  \"projects\": {\n    \"C:\\\\Users\\\\sethr\\\\source\\\\repos\\\\ThicreanPhoenix\\\\Swashbuckler\\\\Swashbuckler\\\\Swashbuckler\\\\Dawnbury.Mods.Phoenix.csproj\": {\n      \"version\": \"1.0.0\",\n      \"restore\": {\n        \"projectUniqueName\": \"C:\\\\Users\\\\sethr\\\\source\\\\repos\\\\ThicreanPhoenix\\\\Swashbuckler\\\\Swashbuckler\\\\Swashbuckler\\\\Dawnbury.Mods.Phoenix.csproj\",\n        \"projectName\": \"Dawnbury.Mods.Phoenix\",\n        \"projectPath\": \"C:\\\\Users\\\\sethr\\\\source\\\\repos\\\\ThicreanPhoenix\\\\Swashbuckler\\\\Swashbuckler\\\\Swashbuckler\\\\Dawnbury.Mods.Phoenix.csproj\",\n        \"packagesPath\": \"C:\\\\Users\\\\sethr\\\\.nuget\\\\packages\\\\\",\n        \"outputPath\": \"C:\\\\Users\\\\sethr\\\\source\\\\repos\\\\ThicreanPhoenix\\\\Swashbuckler\\\\Swashbuckler\\\\Swashbuckler\\\\obj\\\\\",\n        \"projectStyle\": \"PackageReference\",\n        \"fallbackFolders\": [\n          \"C:\\\\Program Files (x86)\\\\Microsoft Visual Studio\\\\Shared\\\\NuGetPackages\"\n        ],\n        \"configFilePaths\": [\n          \"C:\\\\Users\\\\sethr\\\\AppData\\\\Roaming\\\\NuGet\\\\NuGet.Config\",\n          \"C:\\\\Program Files (x86)\\\\NuGet\\\\Config\\\\Microsoft.VisualStudio.FallbackLocation.config\",\n          \"C:\\\\Program Files (x86)\\\\NuGet\\\\Config\\\\Microsoft.VisualStudio.Offline.config\"\n        ],\n        \"originalTargetFrameworks\": [\n          \"net9.0\"\n        ],\n        \"sources\": {\n          \"C:\\\\Program Files (x86)\\\\Microsoft SDKs\\\\NuGetPackages\\\\\": {},\n          \"https://api.nuget.org/v3/index.json\": {}\n        },\n        \"frameworks\": {\n          \"net9.0\": {\n            \"targetAlias\": \"net9.0\",\n            \"projectReferences\": {}\n          }\n        },\n        \"warningProperties\": {\n          \"warnAsError\": [\n            \"NU1605\"\n          ]\n        },\n        \"restoreAuditProperties\": {\n          \"enableAudit\": \"true\",\n          \"auditLevel\": \"low\",\n          \"auditMode\": \"direct\"\n        },\n        \"SdkAnalysisLevel\": \"9.0.300\"\n      },\n      \"frameworks\": {\n        \"net9.0\": {\n          \"targetAlias\": \"net9.0\",\n          \"dependencies\": {\n            \"Microsoft.CSharp\": {\n              \"target\": \"Package\",\n              \"version\": \"[4.7.0, )\"\n            }\n          },\n          \"imports\": [\n            \"net461\",\n            \"net462\",\n            \"net47\",\n            \"net471\",\n            \"net472\",\n            \"net48\",\n            \"net481\"\n          ],\n          \"assetTargetFallback\": true,\n          \"warn\": true,\n          \"frameworkReferences\": {\n            \"Microsoft.NETCore.App\": {\n              \"privateAssets\": \"all\"\n            }\n          },\n          \"runtimeIdentifierGraphPath\": \"C:\\\\Program Files\\\\dotnet\\\\sdk\\\\9.0.301/PortableRuntimeIdentifierGraph.json\"\n        }\n      }\n    }\n  }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/obj/Dawnbury.Mods.Phoenix.csproj.nuget.dgspec.json b/obj/Dawnbury.Mods.Phoenix.csproj.nuget.dgspec.json
+--- a/obj/Dawnbury.Mods.Phoenix.csproj.nuget.dgspec.json	(revision 030e0450730f454afed40e68b6d58fa9279fa990)
++++ b/obj/Dawnbury.Mods.Phoenix.csproj.nuget.dgspec.json	(date 1761360573093)
+@@ -1,31 +1,26 @@
+ {
+   "format": 1,
+   "restore": {
+-    "C:\\Users\\sethr\\source\\repos\\ThicreanPhoenix\\Swashbuckler\\Swashbuckler\\Swashbuckler\\Dawnbury.Mods.Phoenix.csproj": {}
++    "/home/phoenix/RiderProjects/Swashbuckler/Dawnbury.Mods.Phoenix.csproj": {}
+   },
+   "projects": {
+-    "C:\\Users\\sethr\\source\\repos\\ThicreanPhoenix\\Swashbuckler\\Swashbuckler\\Swashbuckler\\Dawnbury.Mods.Phoenix.csproj": {
++    "/home/phoenix/RiderProjects/Swashbuckler/Dawnbury.Mods.Phoenix.csproj": {
+       "version": "1.0.0",
+       "restore": {
+-        "projectUniqueName": "C:\\Users\\sethr\\source\\repos\\ThicreanPhoenix\\Swashbuckler\\Swashbuckler\\Swashbuckler\\Dawnbury.Mods.Phoenix.csproj",
++        "projectUniqueName": "/home/phoenix/RiderProjects/Swashbuckler/Dawnbury.Mods.Phoenix.csproj",
+         "projectName": "Dawnbury.Mods.Phoenix",
+-        "projectPath": "C:\\Users\\sethr\\source\\repos\\ThicreanPhoenix\\Swashbuckler\\Swashbuckler\\Swashbuckler\\Dawnbury.Mods.Phoenix.csproj",
+-        "packagesPath": "C:\\Users\\sethr\\.nuget\\packages\\",
+-        "outputPath": "C:\\Users\\sethr\\source\\repos\\ThicreanPhoenix\\Swashbuckler\\Swashbuckler\\Swashbuckler\\obj\\",
++        "projectPath": "/home/phoenix/RiderProjects/Swashbuckler/Dawnbury.Mods.Phoenix.csproj",
++        "packagesPath": "/home/phoenix/.nuget/packages/",
++        "outputPath": "/home/phoenix/RiderProjects/Swashbuckler/obj/",
+         "projectStyle": "PackageReference",
+-        "fallbackFolders": [
+-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+-        ],
+         "configFilePaths": [
+-          "C:\\Users\\sethr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
++          "/home/phoenix/.nuget/NuGet/NuGet.Config"
+         ],
+         "originalTargetFrameworks": [
+           "net9.0"
+         ],
+         "sources": {
+-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
++          "/usr/lib/dotnet/library-packs": {},
+           "https://api.nuget.org/v3/index.json": {}
+         },
+         "frameworks": {
+@@ -44,7 +39,7 @@
+           "auditLevel": "low",
+           "auditMode": "direct"
+         },
+-        "SdkAnalysisLevel": "9.0.300"
++        "SdkAnalysisLevel": "9.0.100"
+       },
+       "frameworks": {
+         "net9.0": {
+@@ -71,7 +66,7 @@
+               "privateAssets": "all"
+             }
+           },
+-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
++          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/9.0.111/PortableRuntimeIdentifierGraph.json"
+         }
+       }
+     }
