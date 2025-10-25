@@ -5,36 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ec80547-bb55-447e-bda9-4afd723f79d5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_25_25,_1_19 PM_[Changes]/Dawnbury.Mods.Phoenix.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_25_25,_1_19 PM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_25_25,_1_19 PM_[Changes]1/Dawnbury.Mods.Phoenix.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_25_25,_1_19 PM_[Changes]1/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_25_25__1_19PM__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_25_25__1_19PM__Changes_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Update_at_10_25_25,_11_56 AM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Update_at_10_25_25,_11_56 AM_[Changes]1/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Update_at_10_25_25,_1_25 PM_[Changes]/Dawnbury.Mods.Phoenix.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Update_at_10_25_25,_1_25 PM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Update_at_10_25_25,_1_25 PM_[Changes]1/Dawnbury.Mods.Phoenix.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Update_at_10_25_25,_1_25 PM_[Changes]1/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Update_at_10_25_25__11_56AM__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/shelf/Uncommitted_changes_before_Update_at_10_25_25__11_56AM__Changes_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Swashbuckler.dir/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/obj/Debug/net9.0/.NETCoreApp,Version=v9.0.AssemblyAttributes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/obj/Debug/net9.0/Dawnbury.Mods.Phoenix.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/obj/project.assets.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/obj/project.nuget.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/obj/project.packagespec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dawnbury.Mods.Phoenix.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Dawnbury.Mods.Phoenix.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PhoenixLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PhoenixLoader.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Swashbuckler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Swashbuckler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Weapons.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Weapons.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +15,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Remake-Solution" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -61,6 +32,9 @@
     &quot;accountId&quot;: &quot;6e97f6b7-23d6-4926-9e62-f6b78155760b&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///home/phoenix/RiderProjects/Swashbuckler/Swashbuckler.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -71,21 +45,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "restructure",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="6ec80547-bb55-447e-bda9-4afd723f79d5" name="Changes" comment="" />
@@ -97,7 +71,17 @@
       <workItem from="1761416113917" duration="357000" />
       <workItem from="1761416575915" duration="373000" />
       <workItem from="1761416979896" duration="178000" />
+      <workItem from="1761417232678" duration="339000" />
     </task>
+    <task id="LOCAL-00001" summary="wip">
+      <option name="closed" value="true" />
+      <created>1761417446072</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1761417446072</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,6 +91,8 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="wip" />
+    <option name="LAST_COMMIT_MESSAGE" value="wip" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
