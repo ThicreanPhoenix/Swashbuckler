@@ -17,13 +17,13 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Common">
-      <HintPath>F:\SteamLibrary\steamapps\common\Dawnsbury Days\Data\Common.dll</HintPath>
+      <HintPath>..\..\.local\share\Steam\steamapps\common\Dawnsbury Days\Data\Common.dll</HintPath>
     </Reference>
     <Reference Include="Dawnsbury Days">
-      <HintPath>F:\SteamLibrary\steamapps\common\Dawnsbury Days\Data\Dawnsbury Days.dll</HintPath>
+      <HintPath>..\..\.local\share\Steam\steamapps\common\Dawnsbury Days\Data\Dawnsbury Days.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
-      <HintPath>F:\SteamLibrary\steamapps\common\Dawnsbury Days\Data\MonoGame.Framework.dll</HintPath>
+      <HintPath>..\..\.local\share\Steam\steamapps\common\Dawnsbury Days\Data\MonoGame.Framework.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
