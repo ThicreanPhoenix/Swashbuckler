@@ -230,7 +230,7 @@ public class AddSwash
                     "To you, a fight is a kind of performance art, and you command your foes' attention with mesmerizing movements.", 
                     "You are trained in Performance and gain the Fascinating Performance skill feat. You gain panache whenever your Performance check exceeds the Will DC of an observing foe, even if that foe isn't fascinated.",
                     "When you hit with a finisher, you can Step as a free action.",
-                    Skill.Performance, new ActionId[] {FascinatingPerformanceActionId })
+                    Skill.Performance, new ActionId[] { FascinatingPerformanceActionId })
                 .WithOnSheet(delegate (CalculatedCharacterSheetValues sheet)
                 {
                     sheet.GrantFeat(FeatName.Performance);
@@ -1638,56 +1638,53 @@ public class AddSwash
             };
         });
 
-    public static Feat TwinParry = new TrueFeat(ModManager.RegisterFeatName("Twin Parry", "Twin Parry {icon:Action}"), 4, "You use your two weapons to parry attacks.", "You gain a +1 circumstance bonus to your AC until the start of your next turn, or a +2 circumstance bonus if either of the weapons you hold have the parry trait. You lose this circumstance bonus if you no longer meet this feat's requirements.", new Trait[3] { Trait.Fighter, Trait.Ranger, SwashTrait })
-        .WithPermanentQEffect("You gain a circumstance bonus to AC using your two held weapons.", delegate (QEffect qf)
+    public static Feat TwinParry = new TrueFeat(ModManager.RegisterFeatName("Twin Parry", "Twin Parry {icon:Action}"), 4, "You use your two weapons to parry attacks.", "You gain a +1 circumstance bonus to your AC until the start of your next turn, or a +2 circumstance bonus if either of the weapons you hold have the parry trait. You lose this circumstance bonus if you no longer meet this feat's requirements.", new Trait[] { Trait.Fighter, Trait.Ranger, SwashTrait })
+        .WithPermanentQEffect(null, delegate (QEffect qf)
         {
-                qf.ProvideMainAction = qftechnical =>
+            qf.ProvideMainAction = qftechnical =>
+            {
+                if ((qf.Owner.HeldItems.Count((Item i) => i.HasTrait(Trait.Weapon) && i.HasTrait(Trait.Melee)) == 2) && !qf.Owner.QEffects.Any((QEffect fct) => fct.Key == "TwinParry"))
                 {
-                    if (qf.Owner.PrimaryItem != null && qf.Owner.SecondaryItem != null)
-                    {
-                        if (qf.Owner.PrimaryItem.HasTrait(Trait.Weapon) && (qf.Owner.SecondaryItem.HasTrait(Trait.Weapon)))
+                    return new ActionPossibility(new CombatAction(qf.Owner, IllustrationName.Swords, "Twin Parry", new Trait[] { }, "You use your weapons to block oncoming attacks and gain a +1 bonus to AC (+2 if one of your weapons has the parry trait).",
+                            Target.Self().WithAdditionalRestriction((Creature you) => you.QEffects.Any((QEffect fct) => fct.Key == "TwinParry") ? "already parrying" : null))
+                        .WithActionCost(1)
+                        .WithGoodness((tg, you, _) => you.AI.GainBonusToAC(you.HeldItems.Any((Item it) => it.HasTrait(AddWeapons.Parry)) ? 2 : 1))
+                        .WithEffectOnEachTarget(async (spell, caster, target, result) =>
                         {
-                            return new ActionPossibility(new CombatAction(qf.Owner, IllustrationName.Swords, "Twin Parry", new Trait[0] { }, "You use your weapons to block oncoming attacks and increase your AC.", Target.Self())
-                                .WithActionCost(1)
-                                .WithEffectOnEachTarget(async (caster, spell, target, result) =>
+                            QEffect parrybonus = new QEffect()
+                            {
+                                Name = "Twin Parry",
+                                Key = "TwinParry",
+                                Illustration = IllustrationName.Swords,
+                                Description = "You have a +" + (caster.HeldItems.Any((Item it) => it.HasTrait(AddWeapons.Parry)) ? "2" : "1") + " circumstance bonus to AC.",
+                                ExpiresAt = ExpirationCondition.ExpiresAtStartOfYourTurn,
+                                BonusToDefenses = delegate (QEffect thing, CombatAction? bonk, Defense defense)
                                 {
-                                    QEffect parrybonus = new QEffect();
-                                    parrybonus.Name = "Twin Parry";
-                                    parrybonus.Illustration = IllustrationName.Swords;
-                                    parrybonus.Description = "You have a +2 circumstance bonus to AC from using your weapons to block.";
-                                    parrybonus.ExpiresAt = ExpirationCondition.ExpiresAtStartOfYourTurn;
-                                    parrybonus.BonusToDefenses = delegate (QEffect thing, CombatAction? bonk, Defense defense)
+                                    if (defense == Defense.AC)
                                     {
-                                        if (parrybonus.Owner.PrimaryItem == null || parrybonus.Owner.SecondaryItem == null) return null;
-                                        if (defense == Defense.AC)
+                                        if (thing.Owner.HeldItems.Any((Item it) => it.HasTrait(AddWeapons.Parry) && it.HasTrait(Trait.Melee)))
                                         {
-                                            if (parrybonus.Owner.PrimaryItem.HasTrait(AddWeapons.Parry) || parrybonus.Owner.SecondaryItem.HasTrait(AddWeapons.Parry))
-                                            {
-                                                return new Bonus(2, BonusType.Circumstance, "Twin Parry");
-                                            }
-                                            else return new Bonus(1, BonusType.Circumstance, "Twin Parry");
+                                            return new Bonus(2, BonusType.Circumstance, "Twin Parry");
                                         }
-                                        else return null;
-                                    };
-                                    parrybonus.StateCheck = qfdw =>
+                                        else return new Bonus(1, BonusType.Circumstance, "Twin Parry");
+                                    }
+                                    else return null;
+                                },
+                                StateCheck = qfdw =>
+                                {
+                                    if ((qfdw.Owner.HeldItems.Count((Item i) => i.HasTrait(Trait.Weapon)) != 2) || qfdw.Owner.HasFreeHand)
                                     {
-                                        if (qfdw.Owner.PrimaryItem == null || qfdw.Owner.SecondaryItem == null || qfdw.Owner.HasFreeHand)
-                                        {
-                                            parrybonus.Owner.RemoveAllQEffects((QEffect effect) => effect.Name == "Twin Parry");
-                                        }
-                                        else if (!(qfdw.Owner.PrimaryItem.HasTrait(Trait.Weapon) && qfdw.Owner.SecondaryItem.HasTrait(Trait.Weapon)))
-                                        {
-                                            parrybonus.Owner.RemoveAllQEffects((QEffect effect) => effect.Name == "Twin Parry");
-                                        }
-                                    };
-                                    parrybonus.CountsAsABuff = true;
-                                    target.AddQEffect(parrybonus);
-                                })
-                                .WithSoundEffect(SfxName.RaiseShield));
-                        }
+                                        qfdw.ExpiresAt = ExpirationCondition.Immediately;
+                                    }
+                                },
+                                CountsAsABuff = true
+                            };
+                            target.AddQEffect(parrybonus);
+                        })
+                        .WithSoundEffect(SfxName.RaiseShield));
                     }
-                    return null;
-                };
+                return null;
+            };
         });
 
         public static void ReplaceOpportunityAttack()
@@ -2044,7 +2041,6 @@ public class AddSwash
         ModManager.AddFeat(LeadingDance);
         ModManager.AddFeat(SwaggeringInitiative);
         ModManager.AddFeat(TwinParry);
-        //ModManager.AddFeat(CombinationFinisher);
         ReplaceOpportunityAttack();
         ModManager.AddFeat(PreciseFinisher);
         ModManager.AddFeat(BleedingFinisher);
