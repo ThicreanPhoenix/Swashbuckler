@@ -2044,7 +2044,7 @@ public class AddSwash
         ModManager.AddFeat(LeadingDance);
         ModManager.AddFeat(SwaggeringInitiative);
         ModManager.AddFeat(TwinParry);
-        ModManager.AddFeat(CombinationFinisher);
+        //ModManager.AddFeat(CombinationFinisher);
         ReplaceOpportunityAttack();
         ModManager.AddFeat(PreciseFinisher);
         ModManager.AddFeat(BleedingFinisher);
