@@ -4,4 +4,4 @@ This mod adds the Swashbuckler, a fast-moving, precise-striking melee combatant,
 
 It also adds the Swashbuckler multiclass archetype with 5 supporting feats.
 
-It also adds 2 weapons introducing the Parry trait: The bo staff and the main-gauche.
+It also adds 4 weapons introducing the Parry trait: The bo staff, main-gauche, scizore, and spiral rapier.
