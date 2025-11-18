@@ -60,6 +60,18 @@ public class AddWeapons
             .WithWeaponProperties(new WeaponProperties("1d8", DamageKind.Bludgeoning));
     });
 
+    public static ItemName Scizore = ModManager.RegisterNewItemIntoTheShop("Scizore", (itemName) =>
+    {
+        return new Item(itemName, new ModdedIllustration("PhoenixAssets/Scizore.png"), "scizore", 0, 1, new Trait[] { Parry, Trait.Disarm, Trait.Martial, Trait.Knife })
+            .WithWeaponProperties(new WeaponProperties("1d6", DamageKind.Slashing));
+    });
+
+    public static ItemName SpiralRapier = ModManager.RegisterNewItemIntoTheShop("SpiralRapier", (itemName) =>
+    {
+        return new Item(itemName, new ModdedIllustration("PhoenixAssets/SpiralRapier.png"), "spiral rapier", 0, 5, new Trait[] { Parry, Trait.Disarm, Trait.Finesse, Trait.Advanced, Trait.Sword })
+            .WithWeaponProperties(new WeaponProperties("1d6", DamageKind.Piercing));
+    });
+    
     public static ItemName DuelingCape = ModManager.RegisterNewItemIntoTheShop("DuelingCape", (itemName) =>
     {
         return new Item(itemName, new ModdedIllustration("PhoenixAssets/DuelingCape.png"), "dueling cape", 0, 0, new Trait[] { })
@@ -77,7 +89,7 @@ public class AddWeapons
                         {
                             me.AddQEffect(new QEffect("Raised Cape", "You have a +1 circumstance bonus to AC and to Deception checks to Feint.", ExpirationCondition.ExpiresAtStartOfYourTurn, me, cape2.Illustration)
                             {
-                                StateCheck = async (qf2) =>
+                                StateCheck = (qf2) =>
                                 {
                                     if (!qf2.Owner.HeldItems.Contains(cape2))
                                     {
@@ -112,7 +124,7 @@ public class AddWeapons
     
     public static void LoadWeapons()
     {
-        List<ItemName> items = new List<ItemName>() { MainGauche, BoStaff, DuelingCape };
+        List<ItemName> items = new List<ItemName>() { MainGauche, BoStaff, Scizore, SpiralRapier, DuelingCape };
         ModManager.RegisterActionOnEachCreature((creature) =>
         {
             creature.AddQEffect(new QEffect()
