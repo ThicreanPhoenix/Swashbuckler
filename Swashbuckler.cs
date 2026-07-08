@@ -13,6 +13,7 @@ using Dawnsbury.Core.Intelligence;
 using Dawnsbury.Core.Mechanics;
 using Dawnsbury.Core.Mechanics.Core;
 using Dawnsbury.Core.Mechanics.Enumerations;
+using Dawnsbury.Core.Mechanics.ReactiveAttacks;
 using Dawnsbury.Core.Mechanics.Rules;
 using Dawnsbury.Core.Mechanics.Targeting;
 using Dawnsbury.Core.Mechanics.Targeting.Targets;
@@ -642,6 +643,10 @@ public class AddSwash
             "You take advantage of an opening from your foe's fumbled attack.", "When an enemy critically fails its Strike against you, you can use your reaction to make a melee Strike against that enemy or make a Disarm attempt.", new List<Trait>(), null)
         .WithPermanentQEffect("When an enemy critically fails a Strike against you, you may Strike or Disarm it using a reaction.", qf =>
         {
+            qf.AfterYouAreTargetedReaction = (qf2, action, result) =>
+            {
+                return null;
+            };
             qf.AfterYouAreTargeted = async (qf, action) =>
             {
                 bool IsStrikeOk(CombatAction strike)
@@ -1171,8 +1176,23 @@ public class AddSwash
 
     public static Feat AfterYou = new TrueFeat(ModManager.RegisterFeatName("After You"), 2, 
             "You allow your foes to make the first move in a show of incredible confidence.", "When a battle begins, instead of rolling initiative, you may voluntarily go last. When you do so, you gain panache.", [ SwashTrait ])
+        .WithActionCost(0)
         .WithPermanentQEffect("You can let your enemies go first to gain panache.", (qf) =>
         {
+            qf.StartOfCombatReaction = qfAfterYou =>
+            {
+                return ReactionOption.CreateCustom("After You", "Move last in initiative and gain panache.", new ModdedIllustration("PhoenixAssets/panache.PNG"), qfAfterYou.Owner,
+                        async () =>
+                        {
+                            Creature target = qfAfterYou.Owner.Battle.InitiativeOrder.Last(); 
+                            int goal = target.Battle.InitiativeOrder.IndexOf(target);
+                            qfAfterYou.Owner.Battle.MoveInInitiativeOrder(qfAfterYou.Owner, goal + 1);
+                            SwashbucklerStyle style = (SwashbucklerStyle)qfAfterYou.Owner.PersistentCharacterSheet.Calculated.AllFeats.Find(feat => feat.HasTrait(SwashStyle));
+                            qfAfterYou.Owner.AddQEffect(CreatePanache(style.Skill));
+                        })
+                    .WithIsFreeAction();
+            };
+            /*
             qf.StartOfCombat = async (qfAfterYou) =>
             {
                 if (await qf.Owner.Battle.AskForConfirmation(qf.Owner, new ModdedIllustration("PhoenixAssets/panache.PNG"), "Move last in initiative and gain panache?", "Yes, move last", "No, roll initiative normally"))
@@ -1184,6 +1204,7 @@ public class AddSwash
                     qf.Owner.AddQEffect(CreatePanache(style.Skill));
                 }
             };
+            */
         });
 
     public static Feat Antagonize = new TrueFeat(ModManager.RegisterFeatName("Antagonize"), 2, 
@@ -1916,49 +1937,63 @@ public class AddSwash
         .WithActionCost(1)
         .WithPermanentQEffect(qf =>
         {
-            qf.ProvideMainAction = qf2 =>
+            qf.ProvideStrikeModifier = item =>
             {
-                if (qf2.Owner.HasEffect(PanacheId))
+                if (qf.Owner.HasEffect(PanacheId))
                 {
-                    return new ActionPossibility(new CombatAction(qf2.Owner, IllustrationName.Unknown, "Mobile Finisher", [Trait.Attack, Trait.AttackDoesNotIncreaseMultipleAttackPenalty, Finisher],
-                            "Stride, then make a Strike.\n\nYou lose panache.",
+                    var mobileFinisher = new CombatAction(qf.Owner, new SideBySideIllustration(IllustrationName.Walk, item.Illustration),
+                            "Mobile Finisher", [Trait.Attack, Trait.AttackDoesNotIncreaseMultipleAttackPenalty, Trait.Basic], "Stride, then Strike.\n\nYou lose panache.",
                             Target.Self())
                         .WithActionCost(1)
-                        .WithEffectOnSelf(async (action, self) =>
+                        .WithEffectOnChosenTargets(async (spell, caster, targets) =>
                         {
-                            if (!await self.StrideAsync("Choose where to Stride with Mobile Finisher. You should end your movement within melee reach of an enemy.", allowCancel: true)) action.RevertRequested = true;
-                            else
+                            var qfTechnical = new QEffect() 
+                            { 
+                                AdjustStrikeAction = (qfThis, strike) =>
+                                {
+                                    strike.WithExtraTrait(Finisher);
+                                }
+                            };
+                            qf.Owner.AddQEffect(qfTechnical);
+                            if (!await caster.StrideAsync("Stride. Then you will Strike.", allowCancel: true))
                             {
-                                var qfTechnical = new QEffect() 
-                                { 
-                                    AdjustStrikeAction = (qfThis, strike) =>
-                                    {
-                                        strike.WithExtraTrait(Finisher);
-                                    }
-                                };
-                                self.AddQEffect(qfTechnical);
-                                
-                                if (!await CommonCombatActions.StrikeCreature(self, null, true, null, true))
-                                {
-                                    self.Battle.Log("Mobile Finisher was converted to a simple Stride.");
-                                    action.RevertRequested = true;
-                                    // Refund panache if the player cancels the Strike.
-                                    SwashbucklerStyle style = (SwashbucklerStyle)qf.Owner.PersistentCharacterSheet.Calculated.AllFeats.Find(feat => feat.HasTrait(SwashStyle));
-                                    qf.Owner.AddQEffect(CreatePanache(style.Skill));
-                                }
-                                else
-                                {
-                                    FinisherExhaustion(self);
-                                }
-
-                                self.RemoveAllQEffects(fct => fct == qfTechnical);
+                                spell.RevertRequested = true;
+                                return;
                             }
-                        }));
+                            await CommonCombatActions.StrikeAnyCreature(caster, null, false); 
+                            qf.Owner.RemoveAllQEffects(fct => fct == qfTechnical);
+                        });
+                    return mobileFinisher;
                 }
                 return null;
             };
         });
-    
+    /*
+    public static Feat ImpossibleRiposte = new TrueFeat(ModManager.RegisterFeatName("ImpossibleRiposte", "Impossible Riposte"), 14,
+            "Your ripostes can deflect attacks back at their source.",
+            "You can use Opportune Riposte when an enemy critically fails an attack roll against you.", [SwashTrait])
+        .WithActionCost(Constants.ACTION_COST_REACTION)
+        .WithPermanentQEffect(qf =>
+        {
+            qf.AddGrantingOfTechnical(cr => cr.EnemyOf(qf.Owner), qfTechnical =>
+            {
+                qfTechnical.AfterYouTakeActionAgainstTargetReaction = (qfThis, spell, target, result) =>
+                {
+                    if (target == qf.Owner && result == CheckResult.CriticalFailure)
+                    {
+                        return ReactionOption.CreateCustom("Impossible Riposte", "[RIPOSTE]", new ModdedIllustration("PhoenixAssets/panache.PNG"), qf.Owner,
+                                async () =>
+                                {
+                                })
+                            .WithIsReaction()
+                            .WithTraits(OpportuneRiposteTrait);
+                    }
+                    return null;
+                };
+            });
+        })
+        .WithPrerequisite(values => values.HasFeat(OpportuneRiposte), "You must have the Opportune Riposte feature.");
+    */
     public static Feat PerfectFinisher = new TrueFeat(ModManager.RegisterFeatName("PerfectFinisher", "Perfect Finisher"), 14,
             "You focus your panache into an impeccable assault.",
             "Make a Strike, rolling the attack roll twice and using the higher result.", [SwashTrait, Finisher, Trait.Fortune])

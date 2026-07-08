@@ -13,6 +13,7 @@ using Dawnsbury.Core.Mechanics.Treasure;
 using Dawnsbury.Core.Mechanics.Targeting;
 using Dawnsbury.Display.Illustrations;
 using Dawnsbury.Modding;
+using Dawnsbury.Display;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,24 @@ public class AddMulticlassSwash
         foreach (var style in AllFeats.GetFeatByFeatName(AddSwash.Swashbuckler.FeatName).Subfeats!)
         {
             var style2 = style as AddSwash.SwashbucklerStyle;
-            yield return new Feat(ModManager.RegisterFeatName(style.FeatName.ToStringOrTechnical() + "ForArchetype", style.Name), style.FlavorText, "You can choose to become trained in " + style2.Skill.ToString() + ". You gain panache" + style.RulesText.Split("panache")[1].Split("\n")[0], new List<Trait>(), null)
+            yield return new Feat(ModManager.RegisterFeatName(style.FeatName.ToStringOrTechnical() + "ForArchetype", style.Name), style.FlavorText, "You can choose to become trained in " + style2.Skill.ToString() + ". You gain panache" + style.RulesText.Split("panache")[1].Split("\n")[0], [], null)
                 .WithOnSheet(delegate (CalculatedCharacterSheetValues sheet)
                 {
                     sheet.TrainInThisOrThisOrSubstitute(Skill.Acrobatics, style2.Skill);
                     sheet.AddFeatForPurposesOfPrerequisitesOnly(style.FeatName);
+                })
+                .WithPermanentQEffect(null, qf =>
+                {
+                    qf.CharacterSheetBecomesCreature = (sheet, creature) =>
+                    {
+                        QEffect panacheGranter = creature.QEffects.First((fct) => fct.Key == "PanacheGranter");
+                        List<ActionId> list = (List<ActionId>)panacheGranter.Tag;
+                        foreach (ActionId id in style2.PanacheTriggers)
+                        {
+                            list.Add(id);
+                            panacheGranter.Description += ", " + id.HumanizeTitleCase2();
+                        }
+                    };
                 });
         }
     }
