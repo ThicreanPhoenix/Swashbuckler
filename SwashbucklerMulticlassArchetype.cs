@@ -4,17 +4,13 @@ using Dawnsbury.Core.CharacterBuilder.Feats;
 using Dawnsbury.Core.CharacterBuilder.FeatsDb;
 using Dawnsbury.Core.CharacterBuilder.FeatsDb.TrueFeatDb.Archetypes;
 using Dawnsbury.Core.CombatActions;
-using Dawnsbury.Core.Creatures;
 using Dawnsbury.Core.Mechanics;
 using Dawnsbury.Core.Mechanics.Core;
 using Dawnsbury.Core.Mechanics.Enumerations;
 using Dawnsbury.Core.Mechanics.Rules;
-using Dawnsbury.Core.Mechanics.Treasure;
 using Dawnsbury.Core.Mechanics.Targeting;
-using Dawnsbury.Display.Illustrations;
 using Dawnsbury.Modding;
 using Dawnsbury.Display;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,22 +45,6 @@ public class AddMulticlassSwash
         }
     }
 
-    public static CombatAction CreateBasicFinisher(Creature swash, Item item, bool thrown, StrikeModifiers modifiers)
-    {
-        CombatAction basicFinisher = StrikeRules.CreateStrike(swash, item, thrown ? RangeKind.Ranged : RangeKind.Melee, -1, thrown, modifiers)
-            .WithActionCost(1)
-            .WithExtraTrait(AddSwash.Finisher)
-            .WithExtraTrait(Trait.Basic)
-            .WithDescription(StrikeRules.CreateBasicStrikeDescription2(modifiers, null, null, null, null, "You lose panache, whether the attack succeeds or fails."))
-            .WithEffectOnSelf(async (spell, self) =>
-            {
-                AddSwash.FinisherExhaustion(self);
-            });
-        basicFinisher.Name = "Basic Finisher";
-        basicFinisher.Illustration = new SideBySideIllustration(item.Illustration, IllustrationName.StarHit);
-        return basicFinisher;
-    }
-
     public static Feat MulticlassSwashDedication = ArchetypeFeats.CreateMulticlassDedication(AddSwash.SwashTrait, 
             "You've learned to move and fight with style and swagger.", "Choose a swashbuckler style. You gain the panache class feature, and can gain panache in all the ways a swashbuckler of your style can. You become trained in Acrobatics or the skill associated with your style. You also become trained in swashbuckler class DC. You don't gain any other effects of your chosen style.", GetSwashArchetypeSubclasses().ToList()).WithDemandsAbility14(Ability.Dexterity).WithDemandsAbility14(Ability.Charisma)
         .WithOnCreature(swash =>
@@ -91,16 +71,24 @@ public class AddMulticlassSwash
         })
         .WithPermanentQEffect(null, qf =>
         {
-            qf.ProvideStrikeModifier = item =>
+            qf.ProvideStrikeModifierIncludingForThrownStrike = (item, thrown) =>
             {
-                StrikeModifiers basic = new StrikeModifiers();
-                bool flag = !item.HasTrait(Trait.Ranged) && (item.HasTrait(Trait.Agile) || item.HasTrait(Trait.Finesse));
-                bool flag2 = qf.Owner.HasEffect(AddSwash.PanacheId);
-                if (flag && flag2)
+                if (qf.Owner.HasEffect(AddSwash.PanacheId) && item.HasTrait(Trait.Melee) && (item.HasTrait(Trait.Agile) || item.HasTrait(Trait.Finesse)))
                 {
-                    return CreateBasicFinisher(qf.Owner, item, false, basic);
+                    CombatAction basicFinisher = qf.Owner.CreateStrike(item, thrown && qf.Owner.HasEffect(AddSwash.FlyingBladeQEffect), -1, new StrikeModifiers())
+                        .WithActionCost(1)
+                        .WithExtraTrait(AddSwash.Finisher)
+                        .WithExtraTrait(Trait.Basic)
+                        .WithStrikeNameAndIllustrationChange("Basic Finisher", IllustrationName.StarHit, thrown && qf.Owner.HasEffect(AddSwash.FlyingBladeQEffect))
+                        .WithEffectOnSelf(async (spell, self) =>
+                        {
+                            AddSwash.FinisherExhaustion(self);
+                        });
+                    basicFinisher.Description = StrikeRules.CreateBasicStrikeDescription2(basicFinisher.StrikeModifiers, null, null, null, null, "You lose panache.");
+                    if (basicFinisher.HasTrait(Trait.Ranged)) basicFinisher.Target = Target.Ranged(item.WeaponProperties!.RangeIncrement);
+                    return basicFinisher;
                 }
-                else return null;
+                return null;
             };
         });
 
