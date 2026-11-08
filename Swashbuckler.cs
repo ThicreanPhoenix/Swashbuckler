@@ -43,6 +43,7 @@ public class AddSwash
     public static QEffectId FascinatedId = ModManager.RegisterEnumMember<QEffectId>("Fascinated");
     public static QEffectId PreciseFinisherQEffectId = ModManager.RegisterEnumMember<QEffectId>("PreciseFinisherQEffectId");
     public static QEffectId FlyingBladeQEffect = ModManager.RegisterEnumMember<QEffectId>("FlyingBlade");
+    public static QEffectId IncredibleLuckQEffect = ModManager.RegisterEnumMember<QEffectId>("IncredibleLuck");
     public static ActionId LeadingDanceId = ModManager.RegisterEnumMember<ActionId>("LeadingDance");
     public static ActionId FascinatingPerformanceActionId = ModManager.RegisterEnumMember<ActionId>("FascinatingPerformanceAction");
     public static FeatName BattledancerStyle = ModManager.RegisterFeatName("Battledancer");
@@ -56,14 +57,14 @@ public class AddSwash
         {
             Id = PanacheId,
             Key = "Panache",
-            BonusToAllSpeeds = (qfpanache) => new Bonus(1, BonusType.Status, "Panache"),
+            BonusToAllSpeeds = (qfpanache) => new Bonus(1, BonusType.Status, "panache"),
             BonusToSkillChecks = (skill, action, creature) =>
             {
                 //NOTE: In tabletop, the bonus from panache is applied only to checks that would grant panache. The current implementation applies it to all skills of the style's type.
                 //      This is based on a misunderstanding of the text. I need to figure out whether to change it or make it an intentional buff from tabletop.
                 if (skill == Skill.Acrobatics || skill == styleSkill)
                 {
-                    return new Bonus(1, BonusType.Status, "Panache");
+                    return new Bonus(1, BonusType.Status, "panache");
                 }
                 else return null;
             },
@@ -1059,10 +1060,11 @@ public class AddSwash
         {
             qf.BeforeYourSavingThrow = async (charm, action, self) =>
             {
-                if (await self.Battle.AskToUseReaction(self, "You are about to make a saving throw. Spend your {icon:Reaction}reaction to gain a +2 circumstance bonus?"))
+                if (await self.Battle.AskToUseReaction(self, "You are about to make a saving throw. Spend your {icon:Reaction}reaction to gain a +2 circumstance bonus" + (self.HasEffect(IncredibleLuckQEffect) ? " {Blue}and roll the save twice, taking the higher number{/}" : "") + "?"))
                 {
                     self.AddQEffect(new QEffect(ExpirationCondition.Ephemeral)
                     {
+                        ProvideFortuneEffect = isSavingThrow => isSavingThrow && self.HasEffect(IncredibleLuckQEffect) ? "incredible luck" : null,
                         BonusToDefenses = (effect, action2, save) => new Bonus(2, BonusType.Circumstance, "Charmed Life")
                     });
                 }
@@ -1852,6 +1854,25 @@ public class AddSwash
             };
         })
         .WithPrerequisite(values => values.HasFeat(OpportuneRiposte.FeatName), "You must have the Opportune Riposte feature.");
+    
+    public static Feat IncredibleLuck = new TrueFeat(ModManager.RegisterFeatName("IncredibleLuck", "Incredible Luck"), 18,
+            "You always seem to bounce back from the worst.",
+            "Whenever you use Charmed Life, roll the save twice (including the +2 circumstance bonus from Charmed Life) and use the better result.", [SwashTrait, Trait.Fortune])
+        .WithPrerequisite(CharmedLife.FeatName, "Charmed Life")
+        .WithPermanentQEffectAndSameRulesText(qf =>
+        {
+            qf.Id = IncredibleLuckQEffect;
+        });
+    
+    public static Feat PanacheParagon = new TrueFeat(ModManager.RegisterFeatName("PanacheParagon", "Panache Paragon"), 20,
+            "You find opportunities to perform stylish feats in the moments between others' heartbeats and eye blinks.",
+            "You are permanently quickened. You can use the extra action only to perform the actions associated with your swashbuckler style.", [SwashTrait])
+        .WithOnCreature((swash) =>
+        {
+            QEffect panacheGranter = swash.QEffects.First((fct) => fct.Key == "PanacheGranter");
+            List<ActionId> list = (List<ActionId>)panacheGranter.Tag;
+            swash.AddQEffect(QEffect.Quickened(action => list!.Contains(action.ActionId)));
+        });
         
     public class SwashbucklerStyle : Feat
     {
@@ -1880,6 +1901,9 @@ public class AddSwash
     public static void LoadSwash()
     {
         ModManager.AddFeat(Swashbuckler);
+        ModManager.AddFeat(OpportuneRiposte);
+        ModManager.AddFeat(PreciseStrike);
+        ModManager.AddFeat(VivaciousSpeed);
         //ModManager.AddFeat(AddPanache);
         ModManager.AddFeat(FascinatingPerformance);
         ModManager.AddFeat(DisarmingFlair);
@@ -1926,5 +1950,7 @@ public class AddSwash
         //ModManager.AddFeat(ImpossibleRiposte);
         ModManager.AddFeat(PerfectFinisher);
         ModManager.AddFeat(FelicitousRiposte);
+        ModManager.AddFeat(IncredibleLuck);
+        ModManager.AddFeat(PanacheParagon);
     }
 }
